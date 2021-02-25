@@ -10,11 +10,11 @@ const routes = [
     component: Main,
     children: [
       {
-        path: "/",
+        path: "/hello",
         component: () => import("../components/HelloWorld")
       },
       {
-        path: "/todo",
+        path: "/",
         component: () => import("../views/Todo")
       }
     ]
