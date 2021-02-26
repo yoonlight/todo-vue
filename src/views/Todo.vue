@@ -7,20 +7,20 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model="to.title"
+                v-model="edit.title"
                 label="Title"
                 required
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="to.body"
+                v-model="edit.body"
                 label="Todo"
                 required
               ></v-text-field>
             </v-col>
             <v-col>
-              <v-btn color="success">Edit</v-btn>
+              <v-btn color="success" @click="updateTodo(edit)">Edit</v-btn>
             </v-col>
           </v-row>
         </v-list-item>
@@ -50,33 +50,27 @@
       </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
         <v-list-item-content>
-          <v-list-item-title class="headline">
-            {{ todo.title }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{ todo.body }}</v-list-item-subtitle>
-          <v-card-actions>
-            <v-row>
-              <v-col>
-                <v-checkbox
-                  @click="check(todo)"
-                  v-model="todo.complete"
-                  :label="`${todo.complete.toString()}`"
-                />
-              </v-col>
-              <v-col>
-                <v-btn color="success" @click="dialog = true">
-                  <v-icon left>mdi-pencil</v-icon>Edit
-                </v-btn>
-                <v-btn color="error" @click="deleteTodo(todo._id)">
-                  DELETE
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-          <v-divider></v-divider>
+          <v-list-item-title class="headline" v-text="todo.title" />
+          <v-list-item-subtitle v-text="todo.body" />
         </v-list-item-content>
+        <v-list-item-action>
+          <v-checkbox
+            @click="check(todo)"
+            v-model="todo.complete"
+            :label="`${todo.complete.toString()}`"
+          />
+          <v-btn color="success" @click="editTodo(todo._id)">
+            <v-icon left>mdi-pencil</v-icon>Edit
+          </v-btn>
+          <v-btn color="error" @click="deleteTodo(todo._id)">
+            DELETE
+          </v-btn>
+        </v-list-item-action>
       </v-list-item>
     </v-card>
+    <div class="text-center">
+      <v-pagination v-model="page" :length="6" />
+    </div>
   </v-container>
 </template>
 
@@ -93,7 +87,12 @@ export default {
     todo: {
       body: "",
       title: ""
-    }
+    },
+    edit: {
+      body: "",
+      title: ""
+    },
+    page: 0
   }),
 
   watch: {
@@ -135,6 +134,11 @@ export default {
 
     check: function(to) {
       this.to = to;
+    },
+
+    editTodo: function(id) {
+      this.dialog = true;
+      this.edit = this.todos.filter(a => a._id == id)[0];
     }
   }
 };
