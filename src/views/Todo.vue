@@ -1,25 +1,71 @@
 <template>
   <v-container>
-    <v-btn color="success" @click="dialog = true">ADD</v-btn>
     <v-dialog v-model="dialog">
       <v-card>
-        ADD Data
-        <v-btn color="success">ADD</v-btn>
+        Edit Data
+        <v-list-item>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="to.title"
+                label="Title"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="to.body"
+                label="Todo"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-btn color="success">Edit</v-btn>
+            </v-col>
+          </v-row>
+        </v-list-item>
       </v-card>
     </v-dialog>
     <v-card>
+      <v-list-item>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="todo.title"
+              label="Title"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="todo.body"
+              label="Todo"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-btn color="success" @click="addTodo(todo)">ADD</v-btn>
+          </v-col>
+        </v-row>
+      </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
         <v-list-item-content>
           <v-list-item-title class="headline">
             {{ todo.title }}
           </v-list-item-title>
-          <v-list-item-subtitle>{{ to.body }}</v-list-item-subtitle>
-          <v-btn color="error" @click="deleteTodo(todo._id)">DELETE</v-btn>
-          <v-checkbox
-            @click="check(todo)"
-            v-model="todo.complete"
-            :label="`Checkbox 1: ${todo.complete.toString()}`"
-          />
+          <v-list-item-subtitle>{{ todo.body }}</v-list-item-subtitle>
+          <v-card-actions>
+            <v-btn color="error" @click="deleteTodo(todo._id)">DELETE</v-btn>
+            <v-btn tile color="success" @click="dialog = true">
+              <v-icon left>mdi-pencil</v-icon>Edit
+            </v-btn>
+            <v-checkbox
+              @click="check(todo)"
+              v-model="todo.complete"
+              :label="`Checkbox 1: ${todo.complete.toString()}`"
+            />
+          </v-card-actions>
+          <v-divider></v-divider>
         </v-list-item-content>
       </v-list-item>
     </v-card>
@@ -37,7 +83,11 @@ export default {
   data: () => ({
     todos: [],
     to: {},
-    dialog: false
+    dialog: false,
+    todo: {
+      body: "",
+      title: ""
+    }
   }),
 
   watch: {
