@@ -55,15 +55,23 @@
           </v-list-item-title>
           <v-list-item-subtitle>{{ todo.body }}</v-list-item-subtitle>
           <v-card-actions>
-            <v-btn color="error" @click="deleteTodo(todo._id)">DELETE</v-btn>
-            <v-btn tile color="success" @click="dialog = true">
-              <v-icon left>mdi-pencil</v-icon>Edit
-            </v-btn>
-            <v-checkbox
-              @click="check(todo)"
-              v-model="todo.complete"
-              :label="`Checkbox 1: ${todo.complete.toString()}`"
-            />
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  @click="check(todo)"
+                  v-model="todo.complete"
+                  :label="`${todo.complete.toString()}`"
+                />
+              </v-col>
+              <v-col>
+                <v-btn color="success" @click="dialog = true">
+                  <v-icon left>mdi-pencil</v-icon>Edit
+                </v-btn>
+                <v-btn color="error" @click="deleteTodo(todo._id)">
+                  DELETE
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card-actions>
           <v-divider></v-divider>
         </v-list-item-content>
@@ -75,9 +83,7 @@
 <script>
 export default {
   async created() {
-    this.todos = await this.axios
-      .get("api/todo?offset=1&limit=10")
-      .then(result => result.data);
+    await this.getTodo();
   },
 
   data: () => ({
@@ -100,22 +106,31 @@ export default {
   },
 
   methods: {
+    getTodo: async function() {
+      this.todos = await this.axios
+        .get("api/todo?offset=1&limit=10")
+        .then(result => result.data);
+    },
+
     deleteTodo: async function(id) {
       await this.axios
         .delete(`api/todo/${id}`)
         .then(result => console.log(result));
+      await this.getTodo();
     },
 
     updateTodo: async function(val) {
       await this.axios
         .put(`api/todo/${val._id}`, val)
         .then(result => console.log(result));
+      await this.getTodo();
     },
 
     addTodo: async function(val) {
       await this.axios
         .post(`api/todo`, val)
         .then(result => console.log(result));
+      await this.getTodo();
     },
 
     check: function(to) {
