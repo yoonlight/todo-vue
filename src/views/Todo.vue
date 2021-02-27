@@ -121,9 +121,10 @@ export default {
     },
 
     updateTodo: async function(val) {
-      await this.axios
-        .put(`api/todo/${val._id}`, val)
-        .then(result => console.log(result));
+      await this.axios.put(`api/todo/${val._id}`, val).then(result => {
+        console.log(result);
+        this.dialog = false;
+      });
       await this.getTodo();
     },
 
@@ -132,6 +133,7 @@ export default {
         .post(`api/todo`, val)
         .then(result => console.log(result));
       await this.getTodo();
+      this.todo = {};
     },
 
     check: function(to) {
