@@ -2,28 +2,38 @@
   <v-container>
     <v-dialog v-model="dialog">
       <v-card>
-        Edit Data
-        <v-list-item>
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="edit.title"
-                label="Title"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="edit.body"
-                label="Todo"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-btn color="success" @click="updateTodo(edit)">Edit</v-btn>
-            </v-col>
-          </v-row>
-        </v-list-item>
+        <v-card-title>
+          Edit Data
+        </v-card-title>
+        <v-card-text>
+          <v-list-item>
+            <v-list-item-content>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="edit.title"
+                    label="Title"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    v-model="edit.body"
+                    label="Todo"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-list-item-action>
+                  <v-col>
+                    <v-btn color="success" @click="updateTodo(edit)"
+                      >Edit</v-btn
+                    >
+                  </v-col>
+                </v-list-item-action>
+              </v-row>
+            </v-list-item-content>
+          </v-list-item>
+        </v-card-text>
       </v-card>
     </v-dialog>
     <v-card>
@@ -85,6 +95,7 @@
     <div class="text-center">
       <v-pagination v-model="offset" :length="pagination.page" />
     </div>
+    <v-select v-model="limit" :items="items" label="Standard" />
   </v-container>
 </template>
 
@@ -108,7 +119,8 @@ export default {
     },
     offset: 1,
     limit: 10,
-    pagination: {}
+    pagination: {},
+    items: [5, 10, 15]
   }),
 
   watch: {
@@ -121,6 +133,12 @@ export default {
     offset: {
       async handler(val) {
         this.getTodo(val, this.limit);
+      }
+    },
+    limit: {
+      deep: true,
+      async handler(val) {
+        this.getTodo(this.offset, val);
       }
     }
   },
