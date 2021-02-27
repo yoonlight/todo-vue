@@ -64,20 +64,23 @@
           </v-row>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item>
+        <v-select
+          :items="filter"
+          item-text="key"
+          item-value="value"
+          v-model="complete"
+        >
+        </v-select>
+      </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
+        <v-checkbox @click="check(todo)" v-model="todo.complete" />
         <v-list-item-content>
           <v-list-item-title class="headline" v-text="todo.title" />
           <v-list-item-subtitle v-text="todo.body" />
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
-            <v-col>
-              <v-checkbox
-                @click="check(todo)"
-                v-model="todo.complete"
-                :label="`${todo.complete.toString()}`"
-              />
-            </v-col>
             <v-col>
               <v-btn color="success" @click="editTodo(todo._id)">
                 <v-icon left>mdi-pencil</v-icon>Edit
@@ -106,21 +109,21 @@ export default {
   },
 
   data: () => ({
+    complete: false,
     todos: [],
     to: {},
     dialog: false,
-    todo: {
-      body: "",
-      title: ""
-    },
-    edit: {
-      body: "",
-      title: ""
-    },
+    todo: {},
+    edit: {},
     offset: 1,
-    limit: 10,
+    limit: 5,
     pagination: {},
-    items: [5, 10, 15]
+    items: [5, 10, 15],
+    filter: [
+      { key: "all", value: "undefined" },
+      { key: "complete", value: true },
+      { key: "ready", value: false }
+    ]
   }),
 
   watch: {
@@ -136,17 +139,26 @@ export default {
       }
     },
     limit: {
-      deep: true,
       async handler(val) {
         this.getTodo(this.offset, val);
+      }
+    },
+    complete: {
+      async handler() {
+        this.offset = 1;
+        this.getTodo(this.offset, this.limit);
       }
     }
   },
 
   methods: {
     getTodo: async function(offset, limit) {
+      let query = ``;
+      if (this.complete != "undefined") {
+        query = `&complete=${this.complete}`;
+      }
       const data = await this.axios
-        .get(`api/todo?offset=${offset}&limit=${limit}`)
+        .get(`api/todo?offset=${offset}&limit=${limit}` + query)
         .then(result => result.data);
       this.todos = data.query;
       this.pagination = data.pagination;
