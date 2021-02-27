@@ -54,17 +54,19 @@
           <v-list-item-subtitle v-text="todo.body" />
         </v-list-item-content>
         <v-list-item-action>
-          <v-checkbox
-            @click="check(todo)"
-            v-model="todo.complete"
-            :label="`${todo.complete.toString()}`"
-          />
-          <v-btn color="success" @click="editTodo(todo._id)">
-            <v-icon left>mdi-pencil</v-icon>Edit
-          </v-btn>
-          <v-btn color="error" @click="deleteTodo(todo._id)">
-            DELETE
-          </v-btn>
+          <v-row>
+            <v-checkbox
+              @click="check(todo)"
+              v-model="todo.complete"
+              :label="`${todo.complete.toString()}`"
+            />
+            <v-btn color="success" @click="editTodo(todo._id)">
+              <v-icon left>mdi-pencil</v-icon>Edit
+            </v-btn>
+            <v-btn color="error" @click="deleteTodo(todo._id)">
+              DELETE
+            </v-btn>
+          </v-row>
         </v-list-item-action>
       </v-list-item>
     </v-card>
