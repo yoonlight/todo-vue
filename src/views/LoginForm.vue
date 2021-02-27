@@ -33,8 +33,11 @@
             <v-btn color="error" class="mr-4" @click="reset">
               Reset Form
             </v-btn>
-            <v-btn color="warning" @click="resetValidation">
+            <v-btn color="warning" class="mr-4" @click="resetValidation">
               Reset Validation
+            </v-btn>
+            <v-btn color="error" class="mr-4" @click="logout">
+              LogOut
             </v-btn>
           </v-form>
         </v-card-text>
@@ -73,6 +76,12 @@ export default {
 
     resetValidation() {
       this.$refs.form.resetValidation();
+    },
+
+    async logout() {
+      await this.axios
+        .get("api/auth/logout")
+        .then(result => console.log(result));
     }
   }
 };

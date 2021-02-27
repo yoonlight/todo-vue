@@ -28,25 +28,31 @@
     </v-dialog>
     <v-card>
       <v-list-item>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="todo.title"
-              label="Title"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-              v-model="todo.body"
-              label="Todo"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-btn color="success" @click="addTodo(todo)">ADD</v-btn>
-          </v-col>
-        </v-row>
+        <v-list-item-content>
+          <v-row>
+            <v-col>
+              <v-text-field
+                v-model="todo.title"
+                label="Title"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="todo.body"
+                label="Todo"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-list-item-action>
+              <v-col>
+                <v-btn color="success" class="mr-4" @click="addTodo(todo)"
+                  >ADD</v-btn
+                >
+              </v-col>
+            </v-list-item-action>
+          </v-row>
+        </v-list-item-content>
       </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
         <v-list-item-content>
@@ -55,17 +61,23 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
-            <v-checkbox
-              @click="check(todo)"
-              v-model="todo.complete"
-              :label="`${todo.complete.toString()}`"
-            />
-            <v-btn color="success" @click="editTodo(todo._id)">
-              <v-icon left>mdi-pencil</v-icon>Edit
-            </v-btn>
-            <v-btn color="error" @click="deleteTodo(todo._id)">
-              DELETE
-            </v-btn>
+            <v-col>
+              <v-checkbox
+                @click="check(todo)"
+                v-model="todo.complete"
+                :label="`${todo.complete.toString()}`"
+              />
+            </v-col>
+            <v-col>
+              <v-btn color="success" @click="editTodo(todo._id)">
+                <v-icon left>mdi-pencil</v-icon>Edit
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn color="error" @click="deleteTodo(todo._id)">
+                DELETE
+              </v-btn>
+            </v-col>
           </v-row>
         </v-list-item-action>
       </v-list-item>
