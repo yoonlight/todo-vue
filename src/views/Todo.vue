@@ -33,6 +33,26 @@
               </v-row>
             </v-list-item-content>
           </v-list-item>
+          <v-dialog v-model="deleteDialog">
+            <v-card>
+              <v-card-title>
+                Are you sure to delete todo?
+              </v-card-title>
+              <v-card-text>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-action>
+                      <v-col>
+                        <v-btn color="error" @click="deleteTodo(to._id)"
+                          >DELETE</v-btn
+                        >
+                      </v-col>
+                    </v-list-item-action>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card-text>
+            </v-card>
+          </v-dialog>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -87,7 +107,7 @@
               </v-btn>
             </v-col>
             <v-col>
-              <v-btn color="error" @click="deleteTodo(todo._id)">
+              <v-btn color="error" @click="(deleteDialog = true), check(todo)">
                 DELETE
               </v-btn>
             </v-col>
@@ -123,7 +143,8 @@ export default {
       { key: "all", value: "undefined" },
       { key: "complete", value: true },
       { key: "ready", value: false }
-    ]
+    ],
+    deleteDialog: false
   }),
 
   watch: {
@@ -169,6 +190,7 @@ export default {
         .delete(`api/todo/${id}`)
         .then(result => console.log(result));
       await this.getTodo(this.offset, this.limit);
+      this.deleteTodo = false;
     },
 
     updateTodo: async function(val) {
@@ -182,7 +204,7 @@ export default {
     addTodo: async function(val) {
       await this.axios
         .post(`api/todo`, val)
-        .then(result => console.log(result));
+        .then(result => this.$toasted.success(result.data, { duration: 1000 }));
       await this.getTodo(this.offset, this.limit);
       this.todo = {};
     },
