@@ -5,14 +5,14 @@
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-              v-model="login.username"
+              v-model="name"
               :counter="10"
               :rules="nameRules"
               label="Username"
               required
             ></v-text-field>
             <v-text-field
-              v-model="login.password"
+              v-model="email"
               label="Password"
               required
             ></v-text-field>
@@ -26,7 +26,7 @@
               :disabled="!valid"
               color="success"
               class="mr-4"
-              @click="validate(login)"
+              @click="validate"
             >
               Validate
             </v-btn>
@@ -47,30 +47,22 @@
 export default {
   data: () => ({
     valid: true,
-    login: {
-      username: "",
-      password: ""
-    },
+    name: "",
     nameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 10) || "Name must be less than 10 characters"
     ],
+    email: "",
     checkbox: false
   }),
 
   methods: {
-    async validate(val) {
-      if (this.$refs.form.validate()) {
-        await this.axios
-          .post(`api/auth/login`, val)
-          .then(result => alert(result.data.message));
-      }
+    validate() {
+      this.$refs.form.validate();
     },
-
     reset() {
       this.$refs.form.reset();
     },
-
     resetValidation() {
       this.$refs.form.resetValidation();
     }
