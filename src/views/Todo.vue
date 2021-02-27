@@ -83,7 +83,7 @@
       </v-list-item>
     </v-card>
     <div class="text-center">
-      <v-pagination v-model="page" :length="6" />
+      <v-pagination v-model="offset" :length="pagination.page" />
     </div>
   </v-container>
 </template>
@@ -91,7 +91,7 @@
 <script>
 export default {
   async created() {
-    await this.getTodo();
+    await this.getTodo(this.offset, this.limit);
   },
 
   data: () => ({
@@ -106,30 +106,39 @@ export default {
       body: "",
       title: ""
     },
-    page: 0
+    offset: 1,
+    limit: 10,
+    pagination: {}
   }),
 
   watch: {
     to: {
       deep: true,
       async handler(val) {
-        this.updateTodo(val);
+        await this.updateTodo(val);
+      }
+    },
+    offset: {
+      async handler(val) {
+        this.getTodo(val, this.limit);
       }
     }
   },
 
   methods: {
-    getTodo: async function() {
-      this.todos = await this.axios
-        .get("api/todo?offset=1&limit=10")
+    getTodo: async function(offset, limit) {
+      const data = await this.axios
+        .get(`api/todo?offset=${offset}&limit=${limit}`)
         .then(result => result.data);
+      this.todos = data.query;
+      this.pagination = data.pagination;
     },
 
     deleteTodo: async function(id) {
       await this.axios
         .delete(`api/todo/${id}`)
         .then(result => console.log(result));
-      await this.getTodo();
+      await this.getTodo(this.offset, this.limit);
     },
 
     updateTodo: async function(val) {
@@ -137,14 +146,14 @@ export default {
         console.log(result);
         this.dialog = false;
       });
-      await this.getTodo();
+      await this.getTodo(this.offset, this.limit);
     },
 
     addTodo: async function(val) {
       await this.axios
         .post(`api/todo`, val)
         .then(result => console.log(result));
-      await this.getTodo();
+      await this.getTodo(this.offset, this.limit);
       this.todo = {};
     },
 
