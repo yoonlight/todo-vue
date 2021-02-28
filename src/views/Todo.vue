@@ -34,7 +34,9 @@
         <v-card-text>
           <v-list-item>
             <v-list-item-action>
-              <v-btn color="error" @click="deleteTodo(to._id)">YES</v-btn>
+              <v-btn color="error" @click="deleteTodo(deleteItem._id)"
+                >YES</v-btn
+              >
             </v-list-item-action>
           </v-list-item>
         </v-card-text>
@@ -108,7 +110,7 @@
         </v-row>
       </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
-        <v-checkbox @click="check(todo)" v-model="todo.complete" />
+        <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
         <v-list-item-content>
           <v-list-item-title class="headline" v-text="todo.title" />
           <v-list-item-subtitle v-text="todo.body" />
@@ -120,7 +122,7 @@
               <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
             </v-col>
             <v-col>
-              <v-icon @click="(deleteDialog = true), check(todo)"
+              <v-icon @click="(deleteDialog = true), checkDeleteItem(todo)"
                 >mdi-delete</v-icon
               >
             </v-col>
@@ -158,7 +160,8 @@ export default {
       { key: "complete", value: true },
       { key: "ready", value: false }
     ],
-    deleteDialog: false
+    deleteDialog: false,
+    deleteItem: {}
   }),
 
   watch: {
@@ -223,8 +226,12 @@ export default {
       this.todo = {};
     },
 
-    check: function(to) {
-      this.to = to;
+    checkDeleteItem: function(val) {
+      this.deleteItem = val;
+    },
+
+    updateComplete: function(val) {
+      this.to = val;
     },
 
     editTodo: function(id) {
