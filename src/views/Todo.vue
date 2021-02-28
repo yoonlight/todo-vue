@@ -46,18 +46,10 @@
           <v-form>
             <v-row>
               <v-col cols="12" md="6">
-                <v-text-field
-                  v-model="todo.title"
-                  label="Title"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="todo.title" label="Title" required />
               </v-col>
               <v-col cols="9" md="5">
-                <v-text-field
-                  v-model="todo.body"
-                  label="Todo"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="todo.body" label="Todo" required />
               </v-col>
               <v-col>
                 <v-rating v-model="todo.rate" />
@@ -72,13 +64,20 @@
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
+        <v-col>
+          <v-select />
+          <v-text-field />
+          <v-icon>mdi-text-search</v-icon>
+        </v-col>
+      </v-list-item>
+      <v-list-item>
         <v-select
           :items="filter"
           item-text="key"
           item-value="value"
           v-model="complete"
-        >
-        </v-select>
+        />
+        <v-select v-model="limit" :items="items" label="Standard" />
       </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
         <v-checkbox @click="check(todo)" v-model="todo.complete" />
@@ -104,7 +103,6 @@
     <div class="text-center">
       <v-pagination v-model="offset" :length="pagination.page" />
     </div>
-    <v-select v-model="limit" :items="items" label="Standard" />
   </v-container>
 </template>
 
