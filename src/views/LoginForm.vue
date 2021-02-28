@@ -28,16 +28,10 @@
               class="mr-4"
               @click="validate(login)"
             >
-              Validate
-            </v-btn>
-            <v-btn color="error" class="mr-4" @click="reset">
-              Reset Form
-            </v-btn>
-            <v-btn color="warning" class="mr-4" @click="resetValidation">
-              Reset Validation
+              Login
             </v-btn>
             <v-btn color="error" class="mr-4" @click="logout">
-              LogOut
+              Logout
             </v-btn>
           </v-form>
         </v-card-text>
@@ -48,6 +42,11 @@
 
 <script>
 export default {
+  created() {
+    console.log(this.$cookies.get("connect.sid"));
+    console.log(this.$cookies.keys());
+    this.$cookies.set("keyName", "keyValue", "expiring time");
+  },
   data: () => ({
     valid: true,
     login: {
@@ -66,7 +65,16 @@ export default {
       if (this.$refs.form.validate()) {
         await this.axios
           .post(`api/auth/login`, val)
-          .then(result => alert(result.data.message));
+          .catch(error => {
+            if (error)
+              this.$toasted.error(error.response.data.message, {
+                duration: 2000
+              });
+          })
+          .then(result => {
+            if (result)
+              this.$toasted.success(result.data.message, { duration: 2000 });
+          });
       }
     },
 

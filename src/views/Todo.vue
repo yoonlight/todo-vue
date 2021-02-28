@@ -205,14 +205,14 @@ export default {
     deleteTodo: async function(id) {
       await this.axios
         .delete(`api/todo/${id}`)
-        .then(result => this.$toasted.success(result.data, { duration: 1000 }));
+        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
       await this.getTodo(this.offset, this.limit);
       this.deleteDialog = false;
     },
 
     updateTodo: async function(val) {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
-        this.$toasted.success(result.data, { duration: 1000 });
+        this.$toasted.success(result.data, { duration: 2000 });
         this.dialog = false;
       });
       await this.getTodo(this.offset, this.limit);
@@ -221,7 +221,7 @@ export default {
     addTodo: async function(val) {
       await this.axios
         .post(`api/todo`, val)
-        .then(result => this.$toasted.success(result.data, { duration: 1000 }));
+        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
       await this.getTodo(this.offset, this.limit);
       this.todo = {};
     },
