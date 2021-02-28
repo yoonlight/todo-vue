@@ -9,27 +9,17 @@
           <v-list-item>
             <v-list-item-content>
               <v-row>
-                <v-col>
-                  <v-text-field
-                    v-model="edit.title"
-                    label="Title"
-                    required
-                  ></v-text-field>
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="edit.title" label="Title" required />
                 </v-col>
-                <v-col>
-                  <v-text-field
-                    v-model="edit.body"
-                    label="Todo"
-                    required
-                  ></v-text-field>
+                <v-col cols="9" md="5">
+                  <v-text-field v-model="edit.body" label="Todo" required />
                 </v-col>
-                <v-list-item-action>
-                  <v-col>
-                    <v-btn color="success" @click="updateTodo(edit)"
-                      >Edit</v-btn
-                    >
-                  </v-col>
-                </v-list-item-action>
+                <v-col cols="3" md="1">
+                  <v-list-item-action>
+                    <v-icon @click="updateTodo(edit)">mdi-pencil</v-icon>
+                  </v-list-item-action>
+                </v-col>
               </v-row>
             </v-list-item-content>
           </v-list-item>
@@ -44,7 +34,7 @@
                     <v-list-item-action>
                       <v-col>
                         <v-btn color="error" @click="deleteTodo(to._id)"
-                          >DELETE</v-btn
+                          >YES</v-btn
                         >
                       </v-col>
                     </v-list-item-action>
@@ -59,29 +49,29 @@
     <v-card>
       <v-list-item>
         <v-list-item-content>
-          <v-row>
-            <v-col>
-              <v-text-field
-                v-model="todo.title"
-                label="Title"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col>
-              <v-text-field
-                v-model="todo.body"
-                label="Todo"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-list-item-action>
-              <v-col>
-                <v-btn color="success" class="mr-4" @click="addTodo(todo)"
-                  >ADD</v-btn
-                >
+          <v-form>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="todo.title"
+                  label="Title"
+                  required
+                ></v-text-field>
               </v-col>
-            </v-list-item-action>
-          </v-row>
+              <v-col cols="9" md="5">
+                <v-text-field
+                  v-model="todo.body"
+                  label="Todo"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-list-item-action>
+                <v-col cols="3" md="1">
+                  <v-icon @click="addTodo(todo)">mdi-plus</v-icon>
+                </v-col>
+              </v-list-item-action>
+            </v-row>
+          </v-form>
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
@@ -98,18 +88,17 @@
         <v-list-item-content>
           <v-list-item-title class="headline" v-text="todo.title" />
           <v-list-item-subtitle v-text="todo.body" />
+          <div v-text="todo.date" />
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
             <v-col>
-              <v-btn color="success" @click="editTodo(todo._id)">
-                <v-icon left>mdi-pencil</v-icon>Edit
-              </v-btn>
+              <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
             </v-col>
             <v-col>
-              <v-btn color="error" @click="(deleteDialog = true), check(todo)">
-                DELETE
-              </v-btn>
+              <v-icon @click="(deleteDialog = true), check(todo)"
+                >mdi-delete</v-icon
+              >
             </v-col>
           </v-row>
         </v-list-item-action>
@@ -190,7 +179,7 @@ export default {
         .delete(`api/todo/${id}`)
         .then(result => console.log(result));
       await this.getTodo(this.offset, this.limit);
-      this.deleteTodo = false;
+      this.deleteDialog = false;
     },
 
     updateTodo: async function(val) {
