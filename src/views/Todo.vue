@@ -23,26 +23,20 @@
               </v-row>
             </v-list-item-content>
           </v-list-item>
-          <v-dialog v-model="deleteDialog">
-            <v-card>
-              <v-card-title>
-                Are you sure to delete todo?
-              </v-card-title>
-              <v-card-text>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-action>
-                      <v-col>
-                        <v-btn color="error" @click="deleteTodo(to._id)"
-                          >YES</v-btn
-                        >
-                      </v-col>
-                    </v-list-item-action>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-card-text>
-            </v-card>
-          </v-dialog>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="deleteDialog">
+      <v-card>
+        <v-card-title>
+          Are you sure to delete todo?
+        </v-card-title>
+        <v-card-text>
+          <v-list-item>
+            <v-list-item-action>
+              <v-btn color="error" @click="deleteTodo(to._id)">YES</v-btn>
+            </v-list-item-action>
+          </v-list-item>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -64,6 +58,9 @@
                   label="Todo"
                   required
                 ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-rating v-model="todo.rate" />
               </v-col>
               <v-list-item-action>
                 <v-col cols="3" md="1">
@@ -177,14 +174,14 @@ export default {
     deleteTodo: async function(id) {
       await this.axios
         .delete(`api/todo/${id}`)
-        .then(result => console.log(result));
+        .then(result => this.$toasted.success(result.data, { duration: 1000 }));
       await this.getTodo(this.offset, this.limit);
       this.deleteDialog = false;
     },
 
     updateTodo: async function(val) {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
-        console.log(result);
+        this.$toasted.success(result.data, { duration: 1000 });
         this.dialog = false;
       });
       await this.getTodo(this.offset, this.limit);
