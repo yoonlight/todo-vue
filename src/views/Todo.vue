@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" max-width="600">
       <v-card>
         <v-card-title>
           Edit Data
@@ -9,13 +9,13 @@
           <v-list-item>
             <v-list-item-content>
               <v-row>
-                <v-col cols="12" md="6">
+                <v-col cols="12">
                   <v-text-field v-model="edit.title" label="Title" required />
                 </v-col>
-                <v-col cols="9" md="5">
+                <v-col cols="10" md="11">
                   <v-text-field v-model="edit.body" label="Todo" required />
                 </v-col>
-                <v-col cols="3" md="1">
+                <v-col cols="2" md="1">
                   <v-list-item-action>
                     <v-icon @click="updateTodo(edit)">mdi-pencil</v-icon>
                   </v-list-item-action>
@@ -43,41 +43,69 @@
     <v-card>
       <v-list-item>
         <v-list-item-content>
-          <v-form>
+          <v-form ref="form" v-model="valid">
             <v-row>
-              <v-col cols="12" md="6">
-                <v-text-field v-model="todo.title" label="Title" required />
+              <v-col cols="12" md="4">
+                <v-text-field
+                  v-model="todo.title"
+                  :rules="rules"
+                  label="Title"
+                  required
+                />
               </v-col>
-              <v-col cols="9" md="5">
-                <v-text-field v-model="todo.body" label="Todo" required />
+              <v-col cols="12" md="4">
+                <v-text-field
+                  v-model="todo.body"
+                  :rules="rules"
+                  label="Todo"
+                  required
+                />
               </v-col>
-              <v-col>
-                <v-rating v-model="todo.rate" />
+              <v-col cols="9" md="3">
+                <v-list-item-action>
+                  <v-rating v-model="todo.rate" />
+                </v-list-item-action>
               </v-col>
-              <v-list-item-action>
-                <v-col cols="3" md="1">
-                  <v-icon @click="addTodo(todo)">mdi-plus</v-icon>
-                </v-col>
-              </v-list-item-action>
+              <v-col cols="3" md="1">
+                <v-list-item-action>
+                  <v-icon :disabled="!valid" @click="addTodo(todo)"
+                    >mdi-plus</v-icon
+                  >
+                </v-list-item-action>
+              </v-col>
             </v-row>
           </v-form>
         </v-list-item-content>
       </v-list-item>
       <v-list-item>
-        <v-col>
-          <v-select />
-          <v-text-field />
-          <v-icon>mdi-text-search</v-icon>
-        </v-col>
+        <v-row>
+          <v-col cols="3" md="3">
+            <v-select />
+          </v-col>
+          <v-col cols="6" md="6">
+            <v-text-field />
+          </v-col>
+          <v-col cols="3">
+            <v-list-item-action>
+              <v-icon>mdi-text-search</v-icon>
+            </v-list-item-action>
+          </v-col>
+        </v-row>
       </v-list-item>
       <v-list-item>
-        <v-select
-          :items="filter"
-          item-text="key"
-          item-value="value"
-          v-model="complete"
-        />
-        <v-select v-model="limit" :items="items" label="Standard" />
+        <v-row>
+          <v-col>
+            <v-select
+              :items="filter"
+              item-text="key"
+              item-value="value"
+              v-model="complete"
+            />
+          </v-col>
+          <v-col>
+            <v-select v-model="limit" :items="items" label="Standard" />
+          </v-col>
+        </v-row>
       </v-list-item>
       <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
         <v-checkbox @click="check(todo)" v-model="todo.complete" />
@@ -113,6 +141,8 @@ export default {
   },
 
   data: () => ({
+    valid: true,
+    rules: [v => !!v || "Required !!"],
     complete: false,
     todos: [],
     to: {},
