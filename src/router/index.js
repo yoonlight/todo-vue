@@ -18,14 +18,18 @@ const routes = [
         component: () => import("../views/Todo")
       },
       {
-        path: "/login",
-        component: () => import("../views/LoginForm")
-      },
-      {
         path: "/signup",
         component: () => import("../views/SignUp")
+      },
+      {
+        path: "/example",
+        component: () => import("../views/TodoExample")
       }
     ]
+  },
+  {
+    path: "/auth",
+    component: () => import("../views/LoginForm")
   }
 ];
 

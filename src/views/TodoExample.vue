@@ -9,7 +9,7 @@
       <template v-slot:append>
         <v-fade-transition>
           <v-icon v-if="newTask" @click="create">
-            add_circle
+            mdi-plus-circle
           </v-icon>
         </v-fade-transition>
       </template>
