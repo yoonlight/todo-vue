@@ -205,14 +205,17 @@ export default {
     deleteTodo: async function(id) {
       await this.axios
         .delete(`api/todo/${id}`)
-        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
+        .then(result =>
+          this.$toasted.success(result.data.message, { duration: 2000 })
+        );
       await this.getTodo(this.offset, this.limit);
       this.deleteDialog = false;
     },
 
     updateTodo: async function(val) {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
-        this.$toasted.success(result.data, { duration: 2000 });
+        console.log(result);
+        this.$toasted.success(result.data.message, { duration: 2000 });
         this.dialog = false;
       });
       await this.getTodo(this.offset, this.limit);
