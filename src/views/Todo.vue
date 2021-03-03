@@ -26,7 +26,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="deleteDialog">
+    <v-dialog v-model="deleteDialog" max-width="600">
       <v-card>
         <v-card-title>
           Are you sure to delete todo?
@@ -222,11 +222,15 @@ export default {
     },
 
     addTodo: async function(val) {
-      await this.axios
-        .post(`api/todo`, val)
-        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
-      await this.getTodo(this.offset, this.limit);
-      this.todo = {};
+      if (this.$refs.form.validate()) {
+        await this.axios
+          .post(`api/todo`, val)
+          .then(result =>
+            this.$toasted.success(result.data, { duration: 2000 })
+          );
+        await this.getTodo(this.offset, this.limit);
+        this.$refs.form.reset();
+      }
     },
 
     checkDeleteItem: function(val) {
