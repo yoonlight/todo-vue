@@ -1,16 +1,6 @@
 <template>
-  <v-app-bar app color="primary" dark>
-    <div class="d-flex align-center">
-      <v-img
-        alt="Vuetify Logo"
-        class="shrink mr-2"
-        contain
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-        transition="scale-transition"
-        width="40"
-        elevate-on-scroll
-      />
-    </div>
+  <v-app-bar app color="primary" dark dense>
+    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     <v-toolbar-title>
       Todo List
     </v-toolbar-title>
@@ -21,6 +11,10 @@
 
 <script>
 export default {
+  data: () => ({
+    drawer: false
+  }),
+
   methods: {
     async logout() {
       await this.axios.get("api/auth/logout").then(result => {
