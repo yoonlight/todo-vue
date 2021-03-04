@@ -15,9 +15,7 @@
       Todo List
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn @click="logout" text>
-      <v-icon>mdi-logout</v-icon>
-    </v-btn>
+    <v-icon @click="logout">mdi-logout</v-icon>
   </v-app-bar>
 </template>
 

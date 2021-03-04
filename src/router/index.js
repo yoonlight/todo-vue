@@ -18,10 +18,6 @@ const routes = [
         component: () => import("../views/Todo")
       },
       {
-        path: "/register",
-        component: () => import("../views/SignUp")
-      },
-      {
         path: "/example",
         component: () => import("../views/TodoExample")
       }
@@ -30,6 +26,10 @@ const routes = [
   {
     path: "/auth",
     component: () => import("../views/LoginForm")
+  },
+  {
+    path: "/register",
+    component: () => import("../views/SignUp")
   }
 ];
 
