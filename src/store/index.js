@@ -5,18 +5,24 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: null
+    accessToken: null
   },
   mutations: {
-    setUser(state, user) {
-      state.user = user;
+    LOGIN(state, { accessToken }) {
+      state.accessToken = accessToken;
+    },
+    LOGOUT(state) {
+      state.accessToken = null;
     }
   },
-  getters: {
-    user: state => {
-      return state.user;
+  actions: {
+    LOGIN({ commit }, { email, password }) {
+      return this.axios
+        .post("api/auth/login", { email, password })
+        .then(({ data }) => commit("LOGIN", data));
+    },
+    LOGOUT({ commit }) {
+      commit("LOGOUT");
     }
-  },
-  actions: {},
-  modules: {}
+  }
 });

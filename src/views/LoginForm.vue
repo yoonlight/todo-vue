@@ -48,11 +48,6 @@
 
 <script>
 export default {
-  created() {
-    console.log(this.$cookies.get("connect.sid"));
-    console.log(this.$cookies.keys());
-    this.$cookies.set("keyName", "keyValue", "expiring time");
-  },
   data: () => ({
     show: false,
     valid: true,
@@ -81,6 +76,8 @@ export default {
           .then(result => {
             if (result) {
               this.$toasted.success(result.data.message, { duration: 2000 });
+              let token = result.data.token;
+              localStorage.setItem("user", token);
               this.$router.push("/");
             }
           });
@@ -93,12 +90,18 @@ export default {
         .then(result => this.$toasted.success(result.data, { duration: 2000 }));
     },
 
-    async logout() {
+    async jwtCheck() {
       await this.axios
-        .get("api/auth/logout")
-        .then(result =>
-          this.$toasted.success(result.data.message, { duration: 2000 })
-        );
+        .get("api/auth/profile")
+        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
+    },
+
+    async logout() {
+      await this.axios.get("api/auth/logout").then(result => {
+        this.$toasted.success(result.data.message, { duration: 2000 });
+        localStorage.removeItem("user");
+        this.$router.push("/login");
+      });
     }
   }
 };

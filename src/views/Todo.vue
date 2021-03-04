@@ -114,7 +114,7 @@
         <v-list-item-content>
           <v-list-item-title class="headline" v-text="todo.title" />
           <v-list-item-subtitle v-text="todo.body" />
-          <div v-text="todo.date" />
+          <div v-text="parseDate(todo.date)" />
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
@@ -244,6 +244,11 @@ export default {
     editTodo: function(id) {
       this.dialog = true;
       this.edit = this.todos.filter(a => a._id == id)[0];
+    },
+
+    parseDate: function(val) {
+      let date = new Date(val);
+      return date;
     }
   }
 };
