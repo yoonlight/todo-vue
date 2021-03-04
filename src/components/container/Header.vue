@@ -8,27 +8,29 @@
         src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
         transition="scale-transition"
         width="40"
-      />
-
-      <v-img
-        alt="Vuetify Name"
-        class="shrink mt-1 hidden-sm-and-down"
-        contain
-        min-width="100"
-        src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-        width="100"
+        elevate-on-scroll
       />
     </div>
-
+    <v-toolbar-title>
+      Todo List
+    </v-toolbar-title>
     <v-spacer></v-spacer>
-
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Todo List</span>
-      <v-icon>mdi-open-in-new</v-icon>
+    <v-btn @click="logout" text>
+      <v-icon>mdi-logout</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
+
+<script>
+export default {
+  methods: {
+    async logout() {
+      await this.axios.get("api/auth/logout").then(result => {
+        this.$toasted.success(result.data.message, { duration: 2000 });
+        localStorage.removeItem("user");
+        this.$router.push("/login");
+      });
+    }
+  }
+};
+</script>

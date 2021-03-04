@@ -32,11 +32,11 @@
               >
                 Login
               </v-btn>
-              <v-btn color="error" class="mr-4" @click="logout">
-                Logout
-              </v-btn>
               <v-btn color="success" class="mr-4" @click="sessionCheck">
                 Check
+              </v-btn>
+              <v-btn color="success" @click="register">
+                Register
               </v-btn>
             </v-form>
           </v-card-text>
@@ -96,12 +96,8 @@ export default {
         .then(result => this.$toasted.success(result.data, { duration: 2000 }));
     },
 
-    async logout() {
-      await this.axios.get("api/auth/logout").then(result => {
-        this.$toasted.success(result.data.message, { duration: 2000 });
-        localStorage.removeItem("user");
-        this.$router.push("/login");
-      });
+    register() {
+      this.$router.push("/register");
     }
   }
 };

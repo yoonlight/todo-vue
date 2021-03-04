@@ -1,5 +1,5 @@
 <template>
-  <v-container style="max-width: 600px">
+  <v-container>
     <v-dialog v-model="dialog" max-width="600">
       <v-card>
         <v-card-title>
@@ -18,11 +18,6 @@
                 <v-col cols="2" md="1">
                   <v-list-item-action>
                     <v-icon @click="updateTodo(edit)">mdi-pencil</v-icon>
-                  </v-list-item-action>
-                </v-col>
-                <v-col cols="9" md="3">
-                  <v-list-item-action>
-                    <v-rating v-model="edit.rate" />
                   </v-list-item-action>
                 </v-col>
               </v-row>
@@ -68,6 +63,11 @@
                   required
                 />
               </v-col>
+              <v-col cols="9" md="3">
+                <v-list-item-action>
+                  <v-rating v-model="todo.rate" />
+                </v-list-item-action>
+              </v-col>
               <v-col cols="3" md="1">
                 <v-list-item-action>
                   <v-icon :disabled="!valid" @click="addTodo(todo)"
@@ -81,10 +81,10 @@
       </v-list-item>
       <v-list-item>
         <v-row>
-          <v-col cols="2" md="2">
+          <v-col cols="3" md="3">
             <v-select />
           </v-col>
-          <v-col cols="4" md="4">
+          <v-col cols="6" md="6">
             <v-text-field />
           </v-col>
           <v-col cols="3">
