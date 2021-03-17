@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app>
+  <v-navigation-drawer app v-model="drawer">
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">
@@ -28,16 +28,22 @@
 </template>
 
 <script>
+import { EventBus } from "../../utils/eventBus";
+
 export default {
-  data() {
-    return {
-      items: [
-        { title: "Dashboard", icon: "mdi-view-dashboard" },
-        { title: "Photos", icon: "mdi-image" },
-        { title: "About", icon: "mdi-help-box" }
-      ],
-      right: null
-    };
+  data: () => ({
+    drawer: false,
+    items: [
+      { title: "Dashboard", icon: "mdi-view-dashboard" },
+      { title: "Photos", icon: "mdi-image" },
+      { title: "About", icon: "mdi-help-box" }
+    ],
+    right: null
+  }),
+  created() {
+    EventBus.$on("drawer", drawer => {
+      this.drawer = drawer;
+    });
   }
 };
 </script>

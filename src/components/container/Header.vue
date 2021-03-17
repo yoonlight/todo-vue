@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app color="primary" dark dense>
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon @click="drawerCtrl"></v-app-bar-nav-icon>
     <v-toolbar-title>
       Todo List
     </v-toolbar-title>
@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { EventBus } from "../../utils/eventBus";
+
 export default {
   data: () => ({
     drawer: false
@@ -22,6 +24,10 @@ export default {
         localStorage.removeItem("user");
         this.$router.push("/login");
       });
+    },
+    drawerCtrl() {
+      this.drawer = !this.drawer;
+      EventBus.$emit("drawer", this.drawer);
     }
   }
 };

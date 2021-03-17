@@ -31,7 +31,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="deleteDialog" max-width="600">
+    <!-- <v-dialog v-model="deleteDialog" max-width="600">
       <v-card>
         <v-card-title>
           Are you sure to delete todo?
@@ -46,7 +46,8 @@
           </v-list-item>
         </v-card-text>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
+    <delete-todo :deleteDialog="deleteDialog" />
     <v-card>
       <v-list-item>
         <v-list-item-content>
@@ -137,7 +138,9 @@
 </template>
 
 <script>
+import DeleteTodo from "./DeleteTodo.vue";
 export default {
+  components: { DeleteTodo },
   async created() {
     await this.getTodo(this.offset, this.limit);
   },
