@@ -31,23 +31,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <!-- <v-dialog v-model="deleteDialog" max-width="600">
-      <v-card>
-        <v-card-title>
-          Are you sure to delete todo?
-        </v-card-title>
-        <v-card-text>
-          <v-list-item>
-            <v-list-item-action>
-              <v-btn color="error" @click="deleteTodo(deleteItem._id)"
-                >YES</v-btn
-              >
-            </v-list-item-action>
-          </v-list-item>
-        </v-card-text>
-      </v-card>
-    </v-dialog> -->
-    <delete-todo :deleteDialog="deleteDialog" />
+    <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
     <v-card>
       <v-list-item>
         <v-list-item-content>
@@ -123,7 +107,12 @@
               <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
             </v-col>
             <v-col>
-              <v-icon @click="(deleteDialog = true), checkDeleteItem(todo)"
+              <v-icon
+                @click="
+                  (deleteDialog = !deleteDialog),
+                    checkDeleteItem(todo),
+                    (deleteId = todo._id)
+                "
                 >mdi-delete</v-icon
               >
             </v-col>
@@ -164,7 +153,8 @@ export default {
       { key: "ready", value: false }
     ],
     deleteDialog: false,
-    deleteItem: {}
+    deleteItem: {},
+    deleteId: ""
   }),
 
   watch: {

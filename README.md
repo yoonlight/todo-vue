@@ -26,3 +26,4 @@ vue add vuetify
 ## Reference
 
 [How to use computed](https://stackoverflow.com/questions/48035310/open-a-vuetify-dialog-from-a-component-template-in-vuejs)
+[how to use sync](https://devtimothy.tistory.com/135)

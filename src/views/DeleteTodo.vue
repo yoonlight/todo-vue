@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" @close="!dialog" max-width="600">
+  <v-dialog v-model="dialog" max-width="600" @click.self="handleWrapperClick">
     <v-card>
       <v-card-title>
         Are you sure to delete todo?
@@ -22,8 +22,10 @@ export default {
   },
   props: {
     deleteDialog: {
-      type: Boolean,
-      default: false
+      type: Boolean
+    },
+    deleteId: {
+      type: String
     }
   },
   // computed: {
@@ -38,17 +40,19 @@ export default {
   //     }
   //   }
   // },
-  // watch: {
-  //   // deleteDialog() {
-  //   //   this.dialog = this.deleteDialog
-  //   // },
-  //   dialog() {
-  //     this.deleteDialog = this.dialog
-  //     console.log(this.dialog)
-  //   }
-  // },
+  watch: {
+    deleteDialog() {
+      if (this.deleteDialog == true) {
+        this.dialog = this.deleteDialog;
+      } else {
+        this.dialog = !this.deleteDialog;
+      }
+      console.log(this.dialog);
+      console.log(this.deleteId);
+    }
+  },
   data: () => ({
-    dialog: this.deleteDialog
+    dialog: false
   }),
   methods: {
     deleteTodo: async function(id) {
@@ -59,6 +63,9 @@ export default {
         );
       await this.getTodo(this.offset, this.limit);
       this.deleteDialog = false;
+    },
+    handleWrapperClick() {
+      this.$emit("update:deleteDialog", false);
     }
   }
 };
