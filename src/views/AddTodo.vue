@@ -48,11 +48,9 @@ export default {
       if (this.$refs.form.validate()) {
         await this.axios.post(`api/todo`, val).then(result => {
           this.$toasted.success(result.data, { duration: 2000 });
-
           this.$refs.form.reset();
-
-          EventBus.$emit("refresh");
         });
+        EventBus.$emit("refreshAdd");
       }
     }
   }

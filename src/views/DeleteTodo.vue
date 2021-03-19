@@ -49,8 +49,9 @@ export default {
       await this.axios.delete(`api/todo/${id}`).then(result => {
         this.$toasted.success(result.data.message, { duration: 2000 });
       });
-      EventBus.$emit("refresh");
+      EventBus.$emit("refreshDelete");
       this.dialog = false;
+      console.log("close dialog");
     }
   }
 };

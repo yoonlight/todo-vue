@@ -67,9 +67,11 @@ export default {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
         console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
-        this.dialog = false;
-        EventBus.$emit("refreshEdit");
       });
+      EventBus.$emit("refreshEdit");
+      this.dialog = false;
+      console.log("close dialog");
+      EventBus.$emit("update theme");
     }
   }
 };

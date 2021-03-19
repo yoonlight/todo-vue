@@ -50,10 +50,7 @@
               <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
             </v-col>
             <v-col>
-              <v-icon
-                @click="(deleteDialog = !deleteDialog), (deleteId = todo._id)"
-                >mdi-delete</v-icon
-              >
+              <v-icon @click="deleteTodo(todo._id)">mdi-delete</v-icon>
             </v-col>
           </v-row>
         </v-list-item-action>
@@ -75,23 +72,32 @@ export default {
   components: { DeleteTodo, EditTodo, AddTodo },
   async created() {
     await this.getTodo(this.offset, this.limit);
-    EventBus.$on("refresh", () => {
-      this.getTodo(this.offset, this.limit);
-      console.log("h");
+  },
+
+  async mounted() {
+    EventBus.$on("refreshAdd", async () => {
+      await this.getTodo(this.offset, this.limit);
+      console.log("refreshAdd");
     });
-    EventBus.$on("refreshEdit", () => {
-      this.getTodo(this.offset, this.limit);
-      console.log("h");
+    EventBus.$on("refreshDelete", async () => {
+      await this.getTodo(this.offset, this.limit);
+      console.log("refreshDelete");
+    });
+    EventBus.$on("refreshEdit", async () => {
+      await this.getTodo(this.offset, this.limit);
+      console.log("refreshEdit");
     });
   },
 
+  destroyed() {
+    EventBus.$off("refreshEdit");
+    EventBus.$off("refreshAdd");
+    EventBus.$off("refreshDelete");
+  },
   data: () => ({
-    valid: true,
-    rules: [v => !!v || "Required !!"],
     complete: false,
     todos: [],
-    to: {},
-    todo: {},
+    completeItem: {},
     edit: {},
     offset: 1,
     limit: 5,
@@ -108,30 +114,30 @@ export default {
   }),
 
   watch: {
-    to: {
+    completeItem: {
       deep: true,
       async handler(val) {
         await this.updateTodo(val);
-        console.log("to");
+        console.log("update complete todo");
       }
     },
     offset: {
       async handler(val) {
-        this.getTodo(val, this.limit);
-        console.log("offset");
+        await this.getTodo(val, this.limit);
+        console.log("update offset");
       }
     },
     limit: {
       async handler(val) {
-        this.getTodo(this.offset, val);
-        console.log("limit");
+        await this.getTodo(this.offset, val);
+        console.log("update limit");
       }
     },
     complete: {
       async handler() {
         this.offset = 1;
-        this.getTodo(this.offset, this.limit);
-        console.log("complete");
+        await this.getTodo(this.offset, this.limit);
+        console.log("update complete");
       }
     }
   },
@@ -147,7 +153,7 @@ export default {
         .then(result => result.data);
       this.todos = data.query;
       this.pagination = data.pagination;
-      console.log("asd");
+      console.log("refresh");
     },
 
     updateTodo: async function(val) {
@@ -159,12 +165,17 @@ export default {
     },
 
     updateComplete: function(val) {
-      this.to = val;
+      this.completeItem = val;
     },
 
     editTodo: function(id) {
       this.editDialog = !this.editDialog;
       this.edit = this.todos.filter(a => a._id == id)[0];
+    },
+
+    deleteTodo: function(id) {
+      this.deleteDialog = !this.deleteDialog;
+      this.deleteId = id;
     },
 
     parseDate: function(val) {

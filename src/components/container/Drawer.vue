@@ -14,13 +14,9 @@
     <v-divider></v-divider>
 
     <v-list dense nav>
-      <v-list-item v-for="item in items" :key="item.title" link>
-        <v-list-item-icon>
-          <v-icon>{{ item.icon }}</v-icon>
-        </v-list-item-icon>
-
+      <v-list-item v-for="item in items" :key="item.id" link>
         <v-list-item-content>
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+          <v-list-item-title>{{ item }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -33,11 +29,7 @@ import { EventBus } from "../../utils/eventBus";
 export default {
   data: () => ({
     drawer: false,
-    items: [
-      { title: "Dashboard", icon: "mdi-view-dashboard" },
-      { title: "Photos", icon: "mdi-image" },
-      { title: "About", icon: "mdi-help-box" }
-    ],
+    items: [],
     right: null
   }),
   watch: {
@@ -45,7 +37,15 @@ export default {
       console.log(this.drawer);
     }
   },
-  created() {
+  methods: {
+    clicktheme() {
+      // EventBus.$emit("go to specific theme");
+    }
+  },
+  async created() {
+    this.items = await this.axios
+      .get("api/todo/theme")
+      .then(result => result.data);
     EventBus.$on("drawer", drawer => {
       if (drawer == true) {
         this.drawer = drawer;
@@ -54,6 +54,11 @@ export default {
       } else {
         this.drawer = !drawer;
       }
+    });
+    EventBus.$on("update theme", async () => {
+      this.items = await this.axios
+        .get("api/todo/theme")
+        .then(result => result.data);
     });
   }
 };
