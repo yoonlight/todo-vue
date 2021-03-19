@@ -7,7 +7,7 @@
       <v-card-text>
         <v-list-item>
           <v-list-item-action>
-            <v-btn color="error" @click="deleteTodo(deleteItem._id)">YES</v-btn>
+            <v-btn color="error" @click="deleteTodo(deleteId)">YES</v-btn>
           </v-list-item-action>
         </v-list-item>
       </v-card-text>
@@ -28,18 +28,6 @@ export default {
       type: String
     }
   },
-  // computed: {
-  //   dialog: {
-  //     get () {
-  //       return this.deleteDialog
-  //     },
-  //     set (value) {
-  //       console.log(this.deleteDialog)
-  //       return this.deleteDialog
-  //       //  this.$emit('input', value)
-  //     }
-  //   }
-  // },
   watch: {
     deleteDialog() {
       if (this.deleteDialog == true) {
@@ -47,8 +35,10 @@ export default {
       } else {
         this.dialog = !this.deleteDialog;
       }
-      console.log(this.dialog);
       console.log(this.deleteId);
+    },
+    dialog() {
+      console.log(this.dialog);
     }
   },
   data: () => ({
@@ -61,11 +51,10 @@ export default {
         .then(result =>
           this.$toasted.success(result.data.message, { duration: 2000 })
         );
-      await this.getTodo(this.offset, this.limit);
+      // event 발생 시켜서 todo 에서 list refresh 가능하게!
+
+      // await this.getTodo(this.offset, this.limit);
       this.deleteDialog = false;
-    },
-    handleWrapperClick() {
-      this.$emit("update:deleteDialog", false);
     }
   }
 };

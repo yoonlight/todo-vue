@@ -1,39 +1,10 @@
 <template>
   <v-container style="max-width: 600px">
-    <v-dialog v-model="dialog" max-width="600">
-      <v-card>
-        <v-card-title>
-          Edit Data
-        </v-card-title>
-        <v-card-text>
-          <v-list-item>
-            <v-list-item-content>
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field v-model="edit.title" label="Title" required />
-                </v-col>
-                <v-col cols="10" md="11">
-                  <v-text-field v-model="edit.body" label="Todo" required />
-                </v-col>
-                <v-col cols="2" md="1">
-                  <v-list-item-action>
-                    <v-icon @click="updateTodo(edit)">mdi-pencil</v-icon>
-                  </v-list-item-action>
-                </v-col>
-                <v-col cols="9" md="3">
-                  <v-list-item-action>
-                    <v-rating v-model="edit.rate" />
-                  </v-list-item-action>
-                </v-col>
-              </v-row>
-            </v-list-item-content>
-          </v-list-item>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <edit-todo :editDialog="editDialog" :item="edit" />
     <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
     <v-card>
-      <v-list-item>
+      <add-todo />
+      <!-- <v-list-item>
         <v-list-item-content>
           <v-form ref="form" v-model="valid">
             <v-row>
@@ -63,7 +34,7 @@
             </v-row>
           </v-form>
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item> -->
       <v-list-item>
         <v-row>
           <v-col cols="2" md="2">
@@ -127,9 +98,11 @@
 </template>
 
 <script>
+import AddTodo from "./AddTodo.vue";
 import DeleteTodo from "./DeleteTodo.vue";
+import EditTodo from "./EditTodo.vue";
 export default {
-  components: { DeleteTodo },
+  components: { DeleteTodo, EditTodo, AddTodo },
   async created() {
     await this.getTodo(this.offset, this.limit);
   },
@@ -153,6 +126,7 @@ export default {
       { key: "ready", value: false }
     ],
     deleteDialog: false,
+    editDialog: false,
     deleteItem: {},
     deleteId: ""
   }),
@@ -195,16 +169,6 @@ export default {
       this.pagination = data.pagination;
     },
 
-    deleteTodo: async function(id) {
-      await this.axios
-        .delete(`api/todo/${id}`)
-        .then(result =>
-          this.$toasted.success(result.data.message, { duration: 2000 })
-        );
-      await this.getTodo(this.offset, this.limit);
-      this.deleteDialog = false;
-    },
-
     updateTodo: async function(val) {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
         console.log(result);
@@ -235,7 +199,7 @@ export default {
     },
 
     editTodo: function(id) {
-      this.dialog = true;
+      this.editDialog = !this.editDialog;
       this.edit = this.todos.filter(a => a._id == id)[0];
     },
 
