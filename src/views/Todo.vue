@@ -51,11 +51,7 @@
             </v-col>
             <v-col>
               <v-icon
-                @click="
-                  (deleteDialog = !deleteDialog),
-                    checkDeleteItem(todo),
-                    (deleteId = todo._id)
-                "
+                @click="(deleteDialog = !deleteDialog), (deleteId = todo._id)"
                 >mdi-delete</v-icon
               >
             </v-col>
@@ -73,10 +69,20 @@
 import AddTodo from "./AddTodo.vue";
 import DeleteTodo from "./DeleteTodo.vue";
 import EditTodo from "./EditTodo.vue";
+import { EventBus } from "../utils/eventBus";
+
 export default {
   components: { DeleteTodo, EditTodo, AddTodo },
   async created() {
     await this.getTodo(this.offset, this.limit);
+    EventBus.$on("refresh", () => {
+      this.getTodo(this.offset, this.limit);
+      console.log("h");
+    });
+    EventBus.$on("refreshEdit", () => {
+      this.getTodo(this.offset, this.limit);
+      console.log("h");
+    });
   },
 
   data: () => ({
@@ -85,7 +91,6 @@ export default {
     complete: false,
     todos: [],
     to: {},
-    dialog: false,
     todo: {},
     edit: {},
     offset: 1,
@@ -99,7 +104,6 @@ export default {
     ],
     deleteDialog: false,
     editDialog: false,
-    deleteItem: {},
     deleteId: ""
   }),
 
@@ -108,22 +112,26 @@ export default {
       deep: true,
       async handler(val) {
         await this.updateTodo(val);
+        console.log("to");
       }
     },
     offset: {
       async handler(val) {
         this.getTodo(val, this.limit);
+        console.log("offset");
       }
     },
     limit: {
       async handler(val) {
         this.getTodo(this.offset, val);
+        console.log("limit");
       }
     },
     complete: {
       async handler() {
         this.offset = 1;
         this.getTodo(this.offset, this.limit);
+        console.log("complete");
       }
     }
   },
@@ -139,31 +147,15 @@ export default {
         .then(result => result.data);
       this.todos = data.query;
       this.pagination = data.pagination;
+      console.log("asd");
     },
 
     updateTodo: async function(val) {
       await this.axios.put(`api/todo/${val._id}`, val).then(result => {
         console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
-        this.dialog = false;
       });
       await this.getTodo(this.offset, this.limit);
-    },
-
-    addTodo: async function(val) {
-      if (this.$refs.form.validate()) {
-        await this.axios
-          .post(`api/todo`, val)
-          .then(result =>
-            this.$toasted.success(result.data, { duration: 2000 })
-          );
-        await this.getTodo(this.offset, this.limit);
-        this.$refs.form.reset();
-      }
-    },
-
-    checkDeleteItem: function(val) {
-      this.deleteItem = val;
     },
 
     updateComplete: function(val) {

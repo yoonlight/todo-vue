@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/eventBus";
+
 export default {
   data: () => ({
     todo: {},
@@ -44,14 +46,13 @@ export default {
   methods: {
     addTodo: async function(val) {
       if (this.$refs.form.validate()) {
-        await this.axios
-          .post(`api/todo`, val)
-          .then(result =>
-            this.$toasted.success(result.data, { duration: 2000 })
-          );
-        // await this.getTodo(this.offset, this.limit);
-        // event 발생 시켜서 todo 에서 list refresh 가능하게!
-        this.$refs.form.reset();
+        await this.axios.post(`api/todo`, val).then(result => {
+          this.$toasted.success(result.data, { duration: 2000 });
+
+          this.$refs.form.reset();
+
+          EventBus.$emit("refresh");
+        });
       }
     }
   }

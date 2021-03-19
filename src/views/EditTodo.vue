@@ -33,10 +33,9 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/eventBus";
+
 export default {
-  created() {
-    console.log(this.editDialog);
-  },
   props: {
     editDialog: {
       type: Boolean
@@ -69,10 +68,8 @@ export default {
         console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
         this.dialog = false;
+        EventBus.$emit("refreshEdit");
       });
-      // event 발생 시켜서 todo 에서 list refresh 가능하게!
-
-      // await this.getTodo(this.offset, this.limit);
     }
   }
 };

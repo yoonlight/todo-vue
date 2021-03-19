@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="600" @click.self="handleWrapperClick">
+  <v-dialog v-model="dialog" max-width="600">
     <v-card>
       <v-card-title>
         Are you sure to delete todo?
@@ -16,10 +16,9 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/eventBus";
+
 export default {
-  created() {
-    console.log(this.deleteDialog);
-  },
   props: {
     deleteDialog: {
       type: Boolean
@@ -37,6 +36,7 @@ export default {
       }
       console.log(this.deleteId);
     },
+
     dialog() {
       console.log(this.dialog);
     }
@@ -46,15 +46,11 @@ export default {
   }),
   methods: {
     deleteTodo: async function(id) {
-      await this.axios
-        .delete(`api/todo/${id}`)
-        .then(result =>
-          this.$toasted.success(result.data.message, { duration: 2000 })
-        );
-      // event 발생 시켜서 todo 에서 list refresh 가능하게!
-
-      // await this.getTodo(this.offset, this.limit);
-      this.deleteDialog = false;
+      await this.axios.delete(`api/todo/${id}`).then(result => {
+        this.$toasted.success(result.data.message, { duration: 2000 });
+      });
+      EventBus.$emit("refresh");
+      this.dialog = false;
     }
   }
 };
