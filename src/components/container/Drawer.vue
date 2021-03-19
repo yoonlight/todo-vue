@@ -40,9 +40,20 @@ export default {
     ],
     right: null
   }),
+  watch: {
+    drawer() {
+      console.log(this.drawer);
+    }
+  },
   created() {
     EventBus.$on("drawer", drawer => {
-      this.drawer = drawer;
+      if (drawer == true) {
+        this.drawer = drawer;
+      } else if (drawer == false && this.drawer == true) {
+        this.drawer = drawer;
+      } else {
+        this.drawer = !drawer;
+      }
     });
   }
 };

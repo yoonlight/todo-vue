@@ -4,37 +4,9 @@
     <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
     <v-card>
       <add-todo />
-      <!-- <v-list-item>
-        <v-list-item-content>
-          <v-form ref="form" v-model="valid">
-            <v-row>
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="todo.title"
-                  :rules="rules"
-                  label="Title"
-                  required
-                />
-              </v-col>
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="todo.body"
-                  :rules="rules"
-                  label="Todo"
-                  required
-                />
-              </v-col>
-              <v-col cols="3" md="1">
-                <v-list-item-action>
-                  <v-icon :disabled="!valid" @click="addTodo(todo)"
-                    >mdi-plus</v-icon
-                  >
-                </v-list-item-action>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-list-item-content>
-      </v-list-item> -->
+    </v-card>
+    <br />
+    <v-card>
       <v-list-item>
         <v-row>
           <v-col cols="2" md="2">
