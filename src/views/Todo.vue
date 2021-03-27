@@ -9,21 +9,6 @@
     <v-card>
       <v-list-item>
         <v-row>
-          <v-col cols="2" md="2">
-            <v-select />
-          </v-col>
-          <v-col cols="4" md="4">
-            <v-text-field />
-          </v-col>
-          <v-col cols="3">
-            <v-list-item-action>
-              <v-icon>mdi-text-search</v-icon>
-            </v-list-item-action>
-          </v-col>
-        </v-row>
-      </v-list-item>
-      <v-list-item>
-        <v-row>
           <v-col>
             <v-select
               :items="filter"
@@ -37,11 +22,14 @@
           </v-col>
         </v-row>
       </v-list-item>
-      <v-list-item v-for="todo in todos" v-bind:key="todo.index" two-line>
+      <v-list-item v-for="todo in todos" v-bind:key="todo.index" three-line>
         <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
         <v-list-item-content>
-          <v-list-item-title class="headline" v-text="todo.title" />
-          <v-list-item-subtitle v-text="todo.body" />
+          <span
+            class="text-uppercase font-weight-regular caption"
+            v-text="todo.title"
+          />
+          <div v-text="todo.body" />
           <div v-text="parseDate(todo.date)" />
         </v-list-item-content>
         <v-list-item-action>

@@ -5,6 +5,13 @@
       Todo List
     </v-toolbar-title>
     <v-spacer></v-spacer>
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search"
+      single-line
+    />
+    <v-spacer></v-spacer>
     <v-icon @click="logout">mdi-logout</v-icon>
   </v-app-bar>
 </template>

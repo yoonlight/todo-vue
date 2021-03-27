@@ -4,7 +4,7 @@
       <v-list-item-content>
         <v-form ref="form" v-model="valid">
           <v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="5">
               <v-text-field
                 v-model="todo.title"
                 :rules="rules"
@@ -12,7 +12,7 @@
                 required
               />
             </v-col>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="5">
               <v-text-field
                 v-model="todo.body"
                 :rules="rules"
