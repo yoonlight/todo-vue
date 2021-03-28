@@ -15,21 +15,21 @@ const routes = [
       },
       {
         path: "/",
-        component: () => import("../views/Todo")
+        component: () => import("../views/Todo/Todo")
       },
       {
         path: "/example",
-        component: () => import("../views/TodoExample")
+        component: () => import("../views/Todo/TodoExample")
       }
     ]
   },
   {
     path: "/auth",
-    component: () => import("../views/LoginForm")
+    component: () => import("../views/Login/LoginForm")
   },
   {
     path: "/register",
-    component: () => import("../views/SignUp")
+    component: () => import("../views/Login/SignUp")
   }
 ];
 

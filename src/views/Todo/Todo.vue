@@ -54,7 +54,7 @@
 import AddTodo from "./AddTodo.vue";
 import DeleteTodo from "./DeleteTodo.vue";
 import EditTodo from "./EditTodo.vue";
-import { EventBus } from "../utils/eventBus";
+import { EventBus } from "../../utils/eventBus";
 
 export default {
   components: { DeleteTodo, EditTodo, AddTodo },

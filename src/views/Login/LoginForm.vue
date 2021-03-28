@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="light-blue lighten-5">
       <v-container>
-        <v-card>
+        <v-card class="d-flex justify-center mb-6">
           <v-card-text>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
@@ -31,9 +31,6 @@
                 @click="validate(login)"
               >
                 Login
-              </v-btn>
-              <v-btn color="success" class="mr-4" @click="sessionCheck">
-                Check
               </v-btn>
               <v-btn color="success" @click="register">
                 Register
@@ -82,18 +79,6 @@ export default {
             }
           });
       }
-    },
-
-    async sessionCheck() {
-      await this.axios
-        .get("api/auth")
-        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
-    },
-
-    async jwtCheck() {
-      await this.axios
-        .get("api/auth/profile")
-        .then(result => this.$toasted.success(result.data, { duration: 2000 }));
     },
 
     register() {
