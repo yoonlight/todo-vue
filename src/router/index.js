@@ -19,7 +19,7 @@ const routes = [
       },
       {
         path: "/example",
-        component: () => import("../views/Todo/TodoExample")
+        component: () => import("../views/TodoExample/TodoExample")
       }
     ]
   },
