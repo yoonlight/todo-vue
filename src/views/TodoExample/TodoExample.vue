@@ -18,8 +18,8 @@
     <h2 class="display-1 success--text pl-4">
       Tasks:&nbsp;
       <v-fade-transition leave-absolute>
-        <span :key="`tasks-${tasks.length}`">
-          {{ tasks.length }}
+        <span :key="`tasks-${todos.length}`">
+          {{ todos.length }}
         </span>
       </v-fade-transition>
     </h2>
@@ -44,22 +44,21 @@
 
     <v-divider class="mb-4"></v-divider>
 
-    <v-card v-if="tasks.length > 0">
+    <v-card v-if="todos.length > 0">
       <v-slide-y-transition class="py-0" group tag="v-list">
-        <template v-for="(task, i) in tasks">
+        <template v-for="(task, i) in todos">
           <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-
-          <v-list-item :key="`${i}-${task.text}`">
+          <v-list-item :key="`${i}-${task.body}`">
             <v-list-item-action>
               <v-checkbox
-                v-model="task.done"
-                :color="(task.done && 'grey') || 'primary'"
+                v-model="task.complete"
+                :color="(task.complete && 'grey') || 'primary'"
               >
                 <template v-slot:label>
                   <div
-                    :class="(task.done && 'grey--text') || 'primary--text'"
+                    :class="(task.complete && 'grey--text') || 'primary--text'"
                     class="ml-4"
-                    v-text="task.text"
+                    v-text="task.body"
                   ></div>
                 </template>
               </v-checkbox>
@@ -68,7 +67,7 @@
             <v-spacer></v-spacer>
 
             <v-scroll-x-transition>
-              <v-icon v-if="task.done" color="success">
+              <v-icon v-if="task.complete" color="success">
                 mdi-check
               </v-icon>
             </v-scroll-x-transition>
@@ -80,41 +79,57 @@
 </template>
 
 <script>
+import api from "../../service/api";
+
 export default {
+  async created() {
+    await this.getTodo(this.offset, this.limit);
+  },
   data: () => ({
-    tasks: [
-      {
-        done: false,
-        text: "Foobar"
-      },
-      {
-        done: false,
-        text: "Fizzbuzz"
-      }
-    ],
-    newTask: null
+    newTask: null,
+    todos: [],
+    pagination: {},
+    offset: 1,
+    limit: 5,
+    complete: false
   }),
 
   computed: {
     completedTasks() {
-      return this.tasks.filter(task => task.done).length;
+      return this.todos.filter(task => task.complete).length;
     },
     progress() {
-      return (this.completedTasks / this.tasks.length) * 100;
+      return (this.completedTasks / this.todos.length) * 100;
     },
     remainingTasks() {
-      return this.tasks.length - this.completedTasks;
+      return this.todos.length - this.completedTasks;
     }
   },
 
   methods: {
-    create() {
-      this.tasks.push({
-        done: false,
-        text: this.newTask
-      });
-
+    async create() {
+      const body = {
+        body: this.newTask,
+        title: ""
+      };
+      const result = await api.todo.post(body);
+      this.$toasted.success(result.data, { duration: 2000 });
       this.newTask = null;
+    },
+    getTodo: async function(offset, limit) {
+      let query = ``;
+      if (this.complete != "undefined") {
+        query = `&complete=${this.complete}`;
+      }
+
+      const data = await api.todo
+        .list(offset, limit, query)
+        .then(result => result.data);
+      this.todos = data.query;
+      this.pagination = data.pagination;
+      console.log("refresh");
+      console.log(this.todos);
+      console.log(this.pagination);
     }
   }
 };

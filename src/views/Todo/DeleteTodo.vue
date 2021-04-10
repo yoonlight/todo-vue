@@ -17,6 +17,7 @@
 
 <script>
 import { EventBus } from "../../utils/eventBus";
+import api from "../../service/api";
 
 export default {
   props: {
@@ -46,9 +47,8 @@ export default {
   }),
   methods: {
     deleteTodo: async function(id) {
-      await this.axios.delete(`api/todo/${id}`).then(result => {
-        this.$toasted.success(result.data.message, { duration: 2000 });
-      });
+      const result = await api.todo.delete(id);
+      this.$toasted.success(result.data.message, { duration: 2000 });
       EventBus.$emit("refreshDelete");
       this.dialog = false;
       console.log("close dialog");

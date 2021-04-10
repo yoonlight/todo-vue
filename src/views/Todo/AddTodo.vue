@@ -46,14 +46,9 @@ export default {
   methods: {
     addTodo: async function(val) {
       if (this.$refs.form.validate()) {
-        await api.todo.post(val).then(result => {
-          this.$toasted.success(result.data, { duration: 2000 });
-          this.$refs.form.reset();
-        });
-        await this.axios.post(`api/todo`, val).then(result => {
-          this.$toasted.success(result.data, { duration: 2000 });
-          this.$refs.form.reset();
-        });
+        const result = await api.todo.post(val);
+        this.$toasted.success(result.data, { duration: 2000 });
+        this.$refs.form.reset();
         EventBus.$emit("refreshAdd");
       }
     }

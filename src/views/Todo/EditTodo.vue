@@ -34,6 +34,7 @@
 
 <script>
 import { EventBus } from "../../utils/eventBus";
+import api from "../../service/api";
 
 export default {
   props: {
@@ -64,7 +65,7 @@ export default {
   }),
   methods: {
     updateTodo: async function(val) {
-      await this.axios.put(`api/todo/${val._id}`, val).then(result => {
+      await api.todo.update(val).then(result => {
         console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
       });

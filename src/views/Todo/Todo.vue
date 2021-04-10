@@ -55,6 +55,7 @@ import AddTodo from "./AddTodo.vue";
 import DeleteTodo from "./DeleteTodo.vue";
 import EditTodo from "./EditTodo.vue";
 import { EventBus } from "../../utils/eventBus";
+import api from "../../service/api";
 
 export default {
   components: { DeleteTodo, EditTodo, AddTodo },
@@ -136,8 +137,9 @@ export default {
       if (this.complete != "undefined") {
         query = `&complete=${this.complete}`;
       }
-      const data = await this.axios
-        .get(`api/todo?offset=${offset}&limit=${limit}` + query)
+
+      const data = await api.todo
+        .list(offset, limit, query)
         .then(result => result.data);
       this.todos = data.query;
       this.pagination = data.pagination;
@@ -145,7 +147,7 @@ export default {
     },
 
     updateTodo: async function(val) {
-      await this.axios.put(`api/todo/${val._id}`, val).then(result => {
+      await api.todo.update(val).then(result => {
         console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
       });
