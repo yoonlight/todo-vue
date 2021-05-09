@@ -1,22 +1,12 @@
 <template>
-  <v-container style="max-width: 600px">
-    <edit-todo :editDialog="editDialog" :item="edit" />
-    <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
-    <v-card>
+  <div>
+    <v-container>
+      <edit-todo :editDialog="editDialog" :item="edit" />
+      <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
       <add-todo />
-    </v-card>
-    <br />
-    <v-card>
+      <br />
       <v-list-item>
         <v-row>
-          <v-col>
-            <v-select
-              :items="filter"
-              item-text="key"
-              item-value="value"
-              v-model="complete"
-            />
-          </v-col>
           <v-col>
             <v-select v-model="limit" :items="items" label="Standard" />
           </v-col>
@@ -31,6 +21,7 @@
           />
           <div v-text="todo.body" />
           <div v-text="parseDate(todo.date)" />
+          <v-divider></v-divider>
         </v-list-item-content>
         <v-list-item-action>
           <v-row>
@@ -43,11 +34,36 @@
           </v-row>
         </v-list-item-action>
       </v-list-item>
-    </v-card>
-    <div class="text-center">
-      <v-pagination v-model="offset" :length="pagination.page" />
-    </div>
-  </v-container>
+      <div class="text-center">
+        <v-pagination v-model="offset" :length="pagination.page" />
+      </div>
+    </v-container>
+    <v-bottom-navigation
+      app
+      fixed
+      v-model="value"
+      :value="value"
+      color="primary"
+    >
+      <v-btn>
+        <span>All</span>
+
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Ready</span>
+
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Complete</span>
+
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+  </div>
 </template>
 
 <script>
@@ -84,6 +100,7 @@ export default {
     EventBus.$off("refreshDelete");
   },
   data: () => ({
+    value: 1,
     complete: false,
     todos: [],
     completeItem: {},
@@ -94,8 +111,8 @@ export default {
     items: [5, 10, 15],
     filter: [
       { key: "all", value: "undefined" },
-      { key: "complete", value: true },
-      { key: "ready", value: false }
+      { key: "ready", value: false },
+      { key: "complete", value: true }
     ],
     deleteDialog: false,
     editDialog: false,
@@ -103,6 +120,15 @@ export default {
   }),
 
   watch: {
+    value: {
+      async handler(val) {
+        this.complete = this.filter[val].value;
+        console.log(val);
+        this.offset = 1;
+        await this.getTodo(this.offset, this.limit);
+        console.log("update complete");
+      }
+    },
     completeItem: {
       deep: true,
       async handler(val) {
@@ -120,13 +146,6 @@ export default {
       async handler(val) {
         await this.getTodo(this.offset, val);
         console.log("update limit");
-      }
-    },
-    complete: {
-      async handler() {
-        this.offset = 1;
-        await this.getTodo(this.offset, this.limit);
-        console.log("update complete");
       }
     }
   },

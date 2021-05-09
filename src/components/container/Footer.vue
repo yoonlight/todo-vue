@@ -1,29 +1,27 @@
 <template>
-  <v-footer color="primary" padless>
-    <v-row justify="center" no-gutters>
-      <!-- <v-btn
-        v-for="link in links"
-        :key="link"
-        color="white"
-        text
-        rounded
-        class="my-2"
-      >
-        {{ link }}
-      </v-btn> -->
-      <v-col class="py-4 text-center white--text" cols="12">
-        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
-      </v-col>
-    </v-row>
-  </v-footer>
+  <v-bottom-navigation :value="value" color="primary">
+    <v-btn>
+      <span>Recents</span>
+
+      <v-icon>mdi-history</v-icon>
+    </v-btn>
+
+    <v-btn>
+      <span>Favorites</span>
+
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
+
+    <v-btn>
+      <span>Nearby</span>
+
+      <v-icon>mdi-map-marker</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
 </template>
 
 <script>
 export default {
-  data: () => ({
-    links: ["Home", "About Us", "Team", "Services", "Blog", "Contact Us"]
-  })
+  data: () => ({ value: 1 })
 };
 </script>
-
-<style></style>

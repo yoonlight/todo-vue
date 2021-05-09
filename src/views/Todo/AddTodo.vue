@@ -12,7 +12,7 @@
                 required
               />
             </v-col>
-            <v-col cols="12" md="5">
+            <v-col cols="10" md="5">
               <v-text-field
                 v-model="todo.body"
                 :rules="rules"
@@ -20,7 +20,7 @@
                 required
               />
             </v-col>
-            <v-col cols="3" md="1">
+            <v-col cols="2" md="1">
               <v-list-item-action>
                 <v-icon :disabled="!valid" @click="addTodo(todo)"
                   >mdi-plus</v-icon

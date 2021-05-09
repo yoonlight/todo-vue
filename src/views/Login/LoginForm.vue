@@ -1,43 +1,48 @@
 <template>
   <v-app>
-    <v-main class="light-blue lighten-5">
-      <v-container>
-        <v-card class="d-flex justify-center mb-6">
-          <v-card-text>
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <v-text-field
-                v-model="login.username"
-                :counter="20"
-                :rules="nameRules"
-                label="Username"
-                required
-              ></v-text-field>
-              <v-text-field
-                :type="show ? 'text' : 'password'"
-                v-model="login.password"
-                label="Password"
-                required
-              ></v-text-field>
-              <v-checkbox
-                v-model="checkbox"
-                :rules="[v => !!v || 'You must agree to continue!']"
-                label="Do you agree?"
-                required
-              ></v-checkbox>
-              <v-btn
-                :disabled="!valid"
-                color="success"
-                class="mr-4"
-                @click="validate(login)"
-              >
-                Login
-              </v-btn>
-              <v-btn color="success" @click="register">
-                Register
-              </v-btn>
-            </v-form>
-          </v-card-text>
-        </v-card>
+    <v-main>
+      <v-container fluid class="fill-height">
+        <v-row align="center">
+          <v-col>
+            <v-card-text>
+              <v-form ref="form" v-model="valid" lazy-validation>
+                <v-text-field
+                  v-model="login.username"
+                  :counter="20"
+                  :rules="nameRules"
+                  label="Username"
+                  required
+                ></v-text-field>
+                <v-text-field
+                  v-model="login.password"
+                  label="Password"
+                  required
+                  :type="show1 ? 'text' : 'password'"
+                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                  @click:append="show1 = !show1"
+                ></v-text-field>
+                <v-checkbox
+                  v-model="checkbox"
+                  :rules="[v => !!v || 'You must agree to continue!']"
+                  label="Do you agree?"
+                  required
+                ></v-checkbox>
+                <v-btn
+                  block
+                  :disabled="!valid"
+                  color="success"
+                  @click="validate(login)"
+                >
+                  Login
+                </v-btn>
+                <br />
+                <v-btn block color="success" @click="register">
+                  Register
+                </v-btn>
+              </v-form>
+            </v-card-text>
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
@@ -46,7 +51,7 @@
 <script>
 export default {
   data: () => ({
-    show: false,
+    show1: false,
     valid: true,
     login: {
       username: "",

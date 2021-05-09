@@ -1,16 +1,7 @@
 <template>
-  <v-app-bar app color="primary" dark dense>
+  <v-app-bar app flat color="white" absolute dense>
     <v-app-bar-nav-icon @click="drawerCtrl"></v-app-bar-nav-icon>
-    <v-toolbar-title>
-      Todo List
-    </v-toolbar-title>
-    <v-spacer></v-spacer>
-    <v-text-field
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="Search"
-      single-line
-    />
+    <v-toolbar-title> Todo List </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-icon @click="logout">mdi-logout</v-icon>
   </v-app-bar>
