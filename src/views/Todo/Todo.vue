@@ -12,7 +12,17 @@
           </v-col>
         </v-row>
       </v-list-item>
-      <v-list-item v-for="todo in todos" v-bind:key="todo.index" three-line>
+      <v-list-item
+        v-for="todo in todos"
+        v-bind:key="todo.index"
+        three-line
+        v-touch="{
+          left: () => swipe('Left'),
+          right: () => swipe('Right'),
+          up: () => swipe('Up'),
+          down: () => swipe('Down')
+        }"
+      >
         <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
         <v-list-item-content>
           <span
@@ -116,7 +126,8 @@ export default {
     ],
     deleteDialog: false,
     editDialog: false,
-    deleteId: ""
+    deleteId: "",
+    swipeDirection: "None"
   }),
 
   watch: {
@@ -190,6 +201,11 @@ export default {
     parseDate: function(val) {
       let date = new Date(val).toLocaleDateString();
       return date;
+    },
+
+    swipe(direction) {
+      this.swipeDirection = direction;
+      console.log(this.swipeDirection);
     }
   }
 };
