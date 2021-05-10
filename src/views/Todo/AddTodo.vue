@@ -4,14 +4,6 @@
       <v-list-item-content>
         <v-form ref="form" v-model="valid">
           <v-row>
-            <v-col cols="12" md="5">
-              <v-text-field
-                v-model="todo.title"
-                :rules="rules"
-                label="Title"
-                required
-              />
-            </v-col>
             <v-col cols="10" md="5">
               <v-text-field
                 v-model="todo.body"
@@ -38,6 +30,11 @@
 import { EventBus } from "../../utils/eventBus";
 import api from "../../service/api";
 export default {
+  computed: {
+    theme: function() {
+      return this.$route.params.theme;
+    }
+  },
   data: () => ({
     todo: {},
     valid: true,
@@ -46,6 +43,7 @@ export default {
   methods: {
     addTodo: async function(val) {
       if (this.$refs.form.validate()) {
+        val.title = this.theme;
         const result = await api.todo.post(val);
         this.$toasted.success(result.data, { duration: 2000 });
         this.$refs.form.reset();

@@ -14,7 +14,12 @@
     <v-divider></v-divider>
 
     <v-list dense nav>
-      <v-list-item v-for="item in items" :key="item.id" link>
+      <v-list-item
+        v-for="item in items"
+        :key="item.id"
+        link
+        :to="{ path: `/${item}` }"
+      >
         <v-list-item-content>
           <v-list-item-title>{{ item }}</v-list-item-title>
         </v-list-item-content>
@@ -25,7 +30,7 @@
 
 <script>
 import { EventBus } from "../../utils/eventBus";
-
+import api from "../../service/api";
 export default {
   data: () => ({
     drawer: false,
@@ -43,9 +48,8 @@ export default {
     }
   },
   async created() {
-    this.items = await this.axios
-      .get("api/todo/theme")
-      .then(result => result.data);
+    this.items = await api.todo.theme().then(result => result.data);
+    console.log(this.items);
     EventBus.$on("drawer", drawer => {
       if (drawer == true) {
         this.drawer = drawer;

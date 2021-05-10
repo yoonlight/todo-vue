@@ -18,8 +18,9 @@ const auth = {
 };
 
 const todo = {
-  list: (offset, limit, query) =>
-    instance.get(`todo?offset=${offset}&limit=${limit}` + query),
+  list: (theme, offset, limit, query) =>
+    instance.get(`todo?theme=${theme}&offset=${offset}&limit=${limit}` + query),
+  theme: () => instance.get("todo/theme"),
   get: id => instance.get(`todo/${id}`),
   post: body => instance.post(`todo`, body),
   update: body => instance.put(`todo/${body._id}`, body),

@@ -23,17 +23,17 @@
           down: () => swipe('Down')
         }"
       >
-        <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
+        <v-list-item-action>
+          <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
+        </v-list-item-action>
         <v-list-item-content>
-          <span
-            class="text-uppercase font-weight-regular caption"
-            v-text="todo.title"
-          />
+          <span class="text-uppercase font-weight-regular caption">
+            {{ todo.title }} - {{ parseDate(todo.date) }}
+          </span>
           <div v-text="todo.body" />
-          <div v-text="parseDate(todo.date)" />
           <v-divider></v-divider>
         </v-list-item-content>
-        <v-list-item-action>
+        <v-list-item-action v-if="!mobile">
           <v-row>
             <v-col>
               <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
@@ -57,19 +57,14 @@
     >
       <v-btn>
         <span>All</span>
-
         <v-icon>mdi-history</v-icon>
       </v-btn>
-
       <v-btn>
         <span>Ready</span>
-
         <v-icon>mdi-heart</v-icon>
       </v-btn>
-
       <v-btn>
         <span>Complete</span>
-
         <v-icon>mdi-map-marker</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -86,6 +81,7 @@ import api from "../../service/api";
 export default {
   components: { DeleteTodo, EditTodo, AddTodo },
   async created() {
+    // this.theme = this.$route.params.theme;
     await this.getTodo(this.offset, this.limit);
   },
 
@@ -119,22 +115,24 @@ export default {
     limit: 5,
     pagination: {},
     items: [5, 10, 15],
-    filter: [
-      { key: "all", value: "undefined" },
-      { key: "ready", value: false },
-      { key: "complete", value: true }
-    ],
+    filter: ["undefined", false, true],
     deleteDialog: false,
     editDialog: false,
     deleteId: "",
     swipeDirection: "None"
   }),
-
+  computed: {
+    mobile: function() {
+      return this.$vuetify.breakpoint.mobile;
+    },
+    theme: function() {
+      return this.$route.params.theme;
+    }
+  },
   watch: {
     value: {
       async handler(val) {
-        this.complete = this.filter[val].value;
-        console.log(val);
+        this.complete = this.filter[val];
         this.offset = 1;
         await this.getTodo(this.offset, this.limit);
         console.log("update complete");
@@ -153,6 +151,12 @@ export default {
         console.log("update offset");
       }
     },
+    theme: {
+      async handler() {
+        await this.getTodo(this.offset, this.limit);
+        console.log("update theme");
+      }
+    },
     limit: {
       async handler(val) {
         await this.getTodo(this.offset, val);
@@ -169,7 +173,7 @@ export default {
       }
 
       const data = await api.todo
-        .list(offset, limit, query)
+        .list(this.theme, offset, limit, query)
         .then(result => result.data);
       this.todos = data.query;
       this.pagination = data.pagination;

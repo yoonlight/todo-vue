@@ -22,6 +22,17 @@
 
 <script>
 export default {
-  data: () => ({ value: 1 })
+  data: () => ({ value: 1 }),
+  watch: {
+    value: {
+      async handler(val) {
+        this.complete = this.filter[val].value;
+        console.log(val);
+        this.offset = 1;
+        await this.getTodo(this.offset, this.limit);
+        console.log("update complete");
+      }
+    }
+  }
 };
 </script>
