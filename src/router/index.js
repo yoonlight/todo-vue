@@ -1,28 +1,30 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../components/Main";
+// import store from '../store'
 
 Vue.use(VueRouter);
-
+// const requireAuth = () => (to, from, next) => {
+//   if (store.getters.isAuthenticated) return next()
+//   next('/auth')
+// }
 const routes = [
   {
-    path: "/",
+    path: "/?",
+    // beforeEnter: requireAuth(),
     component: Main,
     children: [
       {
-        path: "/:theme",
+        path: "/:theme?",
+        props: route => ({ theme: route.params.theme || "All" }),
         component: () => import("../views/Todo/Todo")
-      },
-      {
-        path: "/example",
-        component: () => import("../views/TodoExample/TodoExample")
       }
     ]
   },
-  {
-    path: "/auth",
-    component: () => import("../views/Login/LoginForm")
-  },
+  // {
+  //   path: "/auth",
+  //   component: () => import("../views/Login/LoginForm")
+  // },
   {
     path: "/register",
     component: () => import("../views/Login/SignUp")
@@ -33,19 +35,6 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
-});
-
-router.beforeEach((to, from, next) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ["/auth", "/register"];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem("user");
-
-  if (authRequired && !loggedIn) {
-    return next("/auth");
-  }
-
-  next();
 });
 
 export default router;

@@ -1,13 +1,18 @@
 <template>
   <v-dialog v-model="dialog" max-width="600">
     <v-card>
-      <v-card-title>
-        Are you sure to delete todo?
-      </v-card-title>
+      <v-card-title> Are you sure to delete todo? </v-card-title>
       <v-card-text>
         <v-list-item>
           <v-list-item-action>
-            <v-btn color="error" @click="deleteTodo(deleteId)">YES</v-btn>
+            <v-row>
+              <v-col>
+                <v-btn color="error" @click="deleteTodo(deleteId)">YES</v-btn>
+              </v-col>
+              <v-col>
+                <v-btn color="success" @click="dialog = false">NO</v-btn>
+              </v-col>
+            </v-row>
           </v-list-item-action>
         </v-list-item>
       </v-card-text>
@@ -35,11 +40,6 @@ export default {
       } else {
         this.dialog = !this.deleteDialog;
       }
-      console.log(this.deleteId);
-    },
-
-    dialog() {
-      console.log(this.dialog);
     }
   },
   data: () => ({

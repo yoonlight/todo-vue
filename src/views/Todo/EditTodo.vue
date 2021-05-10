@@ -1,9 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="600">
     <v-card>
-      <v-card-title>
-        Edit Data
-      </v-card-title>
+      <v-card-title> Edit Data </v-card-title>
       <v-card-text>
         <v-list-item>
           <v-list-item-content>
@@ -52,11 +50,7 @@ export default {
       } else {
         this.dialog = !this.editDialog;
       }
-      console.log(this.item);
       this.editItem = this.item;
-    },
-    dialog() {
-      console.log(this.dialog);
     }
   },
   data: () => ({
@@ -66,7 +60,6 @@ export default {
   methods: {
     updateTodo: async function(val) {
       await api.todo.update(val).then(result => {
-        console.log(result);
         this.$toasted.success(result.data.message, { duration: 2000 });
       });
       EventBus.$emit("refreshEdit");

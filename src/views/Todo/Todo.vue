@@ -39,11 +39,7 @@
         </v-list-item-action>
       </v-list-item>
       <v-list-item>
-        <v-row>
-          <v-col>
-            <v-select v-model="limit" :items="items" label="Standard" />
-          </v-col>
-        </v-row>
+        <v-select v-model="limit" :items="items" label="Standard" />
       </v-list-item>
       <div class="text-center">
         <v-pagination v-model="offset" :length="pagination.page" />
