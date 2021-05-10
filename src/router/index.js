@@ -10,7 +10,7 @@ const routes = [
     component: Main,
     children: [
       {
-        path: "/:theme",
+        path: "/:theme/:complete",
         component: () => import("../views/Todo/Todo")
       },
       {

@@ -18,7 +18,7 @@
         v-for="item in items"
         :key="item.id"
         link
-        :to="{ path: `/${item}` }"
+        :to="{ path: `/${item}/1` }"
       >
         <v-list-item-content>
           <v-list-item-title>{{ item }}</v-list-item-title>
@@ -37,19 +37,8 @@ export default {
     items: [],
     right: null
   }),
-  watch: {
-    drawer() {
-      console.log(this.drawer);
-    }
-  },
-  methods: {
-    clicktheme() {
-      // EventBus.$emit("go to specific theme");
-    }
-  },
   async created() {
     this.items = await api.todo.theme().then(result => result.data);
-    console.log(this.items);
     EventBus.$on("drawer", drawer => {
       if (drawer == true) {
         this.drawer = drawer;

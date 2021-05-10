@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     async logout() {
-      await this.axios.get("api/auth/logout").then(result => {
+      await this.axios.get("/api/auth/logout").then(result => {
         this.$toasted.success(result.data.message, { duration: 2000 });
         localStorage.removeItem("user");
         this.$router.push("/login");
