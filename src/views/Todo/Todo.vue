@@ -4,24 +4,18 @@
       <edit-todo :editDialog="editDialog" :item="edit" />
       <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
       <add-todo />
-      <br />
-      <v-list-item>
-        <v-row>
-          <v-col>
-            <v-select v-model="limit" :items="items" label="Standard" />
-          </v-col>
-        </v-row>
-      </v-list-item>
       <v-list-item
         v-for="todo in todos"
         v-bind:key="todo.index"
         three-line
         v-touch="{
-          left: () => swipe('Left'),
+          left: () => deleteTodo(todo._id),
           right: () => swipe('Right'),
           up: () => swipe('Up'),
           down: () => swipe('Down')
         }"
+        v-click-outside="onClickOutsideStandard"
+        @click="editTodo(todo._id)"
       >
         <v-list-item-action>
           <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
@@ -43,6 +37,13 @@
             </v-col>
           </v-row>
         </v-list-item-action>
+      </v-list-item>
+      <v-list-item>
+        <v-row>
+          <v-col>
+            <v-select v-model="limit" :items="items" label="Standard" />
+          </v-col>
+        </v-row>
       </v-list-item>
       <div class="text-center">
         <v-pagination v-model="offset" :length="pagination.page" />
@@ -119,7 +120,11 @@ export default {
     deleteDialog: false,
     editDialog: false,
     deleteId: "",
-    swipeDirection: "None"
+    swipeDirection: "None",
+    models: {
+      base: false,
+      conditional: false
+    }
   }),
   computed: {
     mobile: function() {
@@ -210,6 +215,16 @@ export default {
     swipe(direction) {
       this.swipeDirection = direction;
       console.log(this.swipeDirection);
+    },
+
+    onClickOutsideStandard() {
+      this.models.base = false;
+    },
+    onClickOutsideWithConditional() {
+      this.models.conditional = false;
+    },
+    closeConditional() {
+      return this.models.conditional;
     }
   }
 };
