@@ -1,53 +1,75 @@
 <template>
-  <v-container>
-    <edit-todo :editDialog="editDialog" :item="edit" />
-    <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
-    <add-todo />
-    <v-list-item
-      v-for="todo in todos"
-      v-bind:key="todo.index"
-      three-line
-      v-touch="{
-        left: () => deleteTodo(todo._id),
-        right: () => swipe('Right'),
-        up: () => swipe('Up'),
-        down: () => swipe('Down')
-      }"
-      v-click-outside="onClickOutsideStandard"
-      @click="editTodo(todo._id)"
-    >
-      <v-list-item-action>
-        <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
-      </v-list-item-action>
-      <v-list-item-content>
-        <span class="text-uppercase font-weight-regular caption">
-          {{ todo.title }} - {{ parseDate(todo.date) }}
-        </span>
-        <div v-text="todo.body" />
-        <v-divider></v-divider>
-      </v-list-item-content>
-      <v-list-item-action v-if="!mobile">
+  <div>
+    <v-container>
+      <edit-todo :editDialog="editDialog" :item="edit" />
+      <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
+      <add-todo />
+      <v-list-item
+        v-for="todo in todos"
+        v-bind:key="todo.index"
+        three-line
+        v-touch="{
+          left: () => deleteTodo(todo._id),
+          right: () => swipe('Right'),
+          up: () => swipe('Up'),
+          down: () => swipe('Down')
+        }"
+        v-click-outside="onClickOutsideStandard"
+        @click="editTodo(todo._id)"
+      >
+        <v-list-item-action>
+          <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
+        </v-list-item-action>
+        <v-list-item-content>
+          <span class="text-uppercase font-weight-regular caption">
+            {{ todo.title }} - {{ parseDate(todo.date) }}
+          </span>
+          <div v-text="todo.body" />
+          <v-divider></v-divider>
+        </v-list-item-content>
+        <v-list-item-action v-if="!mobile">
+          <v-row>
+            <v-col>
+              <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
+            </v-col>
+            <v-col>
+              <v-icon @click="deleteTodo(todo._id)">mdi-delete</v-icon>
+            </v-col>
+          </v-row>
+        </v-list-item-action>
+      </v-list-item>
+      <v-list-item>
         <v-row>
           <v-col>
-            <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
-          </v-col>
-          <v-col>
-            <v-icon @click="deleteTodo(todo._id)">mdi-delete</v-icon>
+            <v-select v-model="limit" :items="items" label="Standard" />
           </v-col>
         </v-row>
-      </v-list-item-action>
-    </v-list-item>
-    <v-list-item>
-      <v-row>
-        <v-col>
-          <v-select v-model="limit" :items="items" label="Standard" />
-        </v-col>
-      </v-row>
-    </v-list-item>
-    <div class="text-center">
-      <v-pagination v-model="offset" :length="pagination.page" />
-    </div>
-  </v-container>
+      </v-list-item>
+      <div class="text-center">
+        <v-pagination v-model="offset" :length="pagination.page" />
+      </div>
+    </v-container>
+    <v-bottom-navigation
+      app
+      fixed
+      v-model="value"
+      :value="value"
+      color="primary"
+    >
+      <v-btn>
+        <span>All</span>
+        <v-icon>mdi-history</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Ready</span>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Complete</span>
+        <v-icon>mdi-map-marker</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+  </div>
 </template>
 
 <script>
@@ -84,6 +106,7 @@ export default {
     EventBus.$off("refreshDelete");
   },
   data: () => ({
+    value: 1,
     complete: false,
     todos: [],
     completeItem: {},
@@ -108,10 +131,10 @@ export default {
     },
     theme: function() {
       return this.$route.params.theme;
-    },
-    value: function() {
-      return this.$route.params.complete;
     }
+    // value: function() {
+    //   return this.$route.params.complete;
+    // }
   },
   watch: {
     value: {

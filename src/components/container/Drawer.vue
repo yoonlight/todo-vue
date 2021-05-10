@@ -18,7 +18,7 @@
         v-for="item in items"
         :key="item.id"
         link
-        :to="{ path: `/${item}/1` }"
+        :to="{ path: `/${item}` }"
       >
         <v-list-item-content>
           <v-list-item-title>{{ item }}</v-list-item-title>
