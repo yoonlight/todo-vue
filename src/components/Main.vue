@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Header />
-    <Drawer />
+    <!-- <Drawer /> -->
     <v-main>
       <router-view />
     </v-main>
@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import Drawer from "./container/Drawer.vue";
+// import Drawer from "./container/Drawer.vue";
 // import Footer from "./container/Footer.vue";
 import Header from "./container/Header.vue";
 
 export default {
   components: {
-    Header,
+    Header
     // Footer,
-    Drawer
+    // Drawer
   },
 
   data: () => ({

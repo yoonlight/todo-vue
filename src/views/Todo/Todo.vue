@@ -41,8 +41,8 @@
       <v-list-item>
         <v-select v-model="limit" :items="items" label="Standard" />
       </v-list-item>
-      <div class="text-center">
-        <v-pagination v-model="offset" :length="pagination.page" />
+      <div class="text-center" v-if="pagination">
+        <v-pagination v-model="offset" :length="pagination" />
       </div>
     </v-container>
     <v-bottom-navigation
@@ -94,14 +94,19 @@ export default {
       await this.getTodo(this.offset, this.limit);
       console.log("refreshEdit");
     });
+    EventBus.$on("update header", id => {
+      this.subject = id;
+    });
   },
 
   destroyed() {
     EventBus.$off("refreshEdit");
     EventBus.$off("refreshAdd");
     EventBus.$off("refreshDelete");
+    EventBus.$on("update header");
   },
   data: () => ({
+    subject: 0,
     value: 1,
     complete: false,
     todos: [],
@@ -109,7 +114,7 @@ export default {
     edit: {},
     offset: 1,
     limit: 5,
-    pagination: {},
+    pagination: 0,
     items: [5, 10, 15],
     filter: ["undefined", false, true],
     deleteDialog: false,
@@ -149,38 +154,40 @@ export default {
       }
     },
     offset: {
-      async handler(val) {
-        await this.getTodo(val, this.limit);
+      async handler() {
+        await this.getTodo();
         console.log("update offset");
       }
     },
     theme: {
       async handler() {
-        await this.getTodo(this.offset, this.limit);
+        await this.getTodo();
         console.log("update theme");
       }
     },
     limit: {
-      async handler(val) {
-        await this.getTodo(this.offset, val);
+      async handler() {
+        await this.getTodo();
         console.log("update limit");
       }
     }
   },
 
   methods: {
-    getTodo: async function(offset, limit) {
+    getTodo: async function() {
       let query = ``;
       if (this.complete != "undefined") {
         query = `&complete=${this.complete}`;
       }
 
       const data = await api.todo
-        .list(this.theme, offset, limit, query)
+        .list(this.subject, this.offset, this.limit, query)
         .then(result => result.data);
-      this.todos = data.query;
-      this.pagination = data.pagination;
+      this.todos = data[0];
+
+      this.pagination = Math.ceil(data[1] / this.limit);
       console.log("refresh");
+      console.log(this.pagination);
     },
 
     updateTodo: async function(val) {

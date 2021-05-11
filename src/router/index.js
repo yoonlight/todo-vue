@@ -10,12 +10,12 @@ Vue.use(VueRouter);
 // }
 const routes = [
   {
-    path: "/?",
+    path: "/",
     // beforeEnter: requireAuth(),
     component: Main,
     children: [
       {
-        path: "/:theme?",
+        path: "/:project/:theme?",
         props: route => ({ theme: route.params.theme || "All" }),
         component: () => import("../views/Todo/Todo")
       }
