@@ -2,7 +2,10 @@
   <div>
     <v-app-bar app flat color="white" absolute dense>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title> {{ theme }} </v-toolbar-title>
+      <!-- <v-toolbar-title v-if="items">
+        {{
+        }}
+      </v-toolbar-title> -->
       <v-spacer></v-spacer>
       <v-icon @click="logout">mdi-logout</v-icon>
     </v-app-bar>
@@ -25,7 +28,7 @@
             v-for="subject in item.subject"
             :key="subject.id"
             link
-            :to="{ path: `/${item.title}/${subject.title}` }"
+            :to="{ path: `/${item.id}/${subject.id}` }"
           >
             <v-list-item-content>
               <v-list-item-title v-text="subject.title"></v-list-item-title>
@@ -54,11 +57,6 @@ export default {
     items: [],
     right: null
   }),
-  computed: {
-    theme: function() {
-      return this.$route.params.theme;
-    }
-  },
   methods: {
     async logout() {
       await api.auth.logout().then(result => {

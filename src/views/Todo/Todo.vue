@@ -6,34 +6,34 @@
       <add-todo />
       <v-list-item
         v-for="todo in todos"
-        v-bind:key="todo.index"
+        v-bind:key="todo.id"
         three-line
         v-touch="{
-          left: () => deleteTodo(todo._id),
+          left: () => deleteTodo(todo.id),
           right: () => swipe('Right'),
           up: () => swipe('Up'),
           down: () => swipe('Down')
         }"
         v-click-outside="onClickOutsideStandard"
-        @click="editTodo(todo._id)"
+        @click="editTodo(todo.id)"
       >
         <v-list-item-action>
           <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
         </v-list-item-action>
         <v-list-item-content>
           <span class="text-uppercase font-weight-regular caption">
-            {{ todo.title }} - {{ parseDate(todo.date) }}
+            {{ parseDate(todo.created_date) }}
           </span>
-          <div v-text="todo.body" />
+          <div v-text="todo.title" />
           <v-divider></v-divider>
         </v-list-item-content>
         <v-list-item-action v-if="!mobile">
           <v-row>
             <v-col>
-              <v-icon @click="editTodo(todo._id)">mdi-pencil</v-icon>
+              <v-icon @click="editTodo(todo.id)">mdi-pencil</v-icon>
             </v-col>
             <v-col>
-              <v-icon @click="deleteTodo(todo._id)">mdi-delete</v-icon>
+              <v-icon @click="deleteTodo(todo.id)">mdi-delete</v-icon>
             </v-col>
           </v-row>
         </v-list-item-action>
@@ -94,19 +94,14 @@ export default {
       await this.getTodo(this.offset, this.limit);
       console.log("refreshEdit");
     });
-    EventBus.$on("update header", id => {
-      this.subject = id;
-    });
   },
 
   destroyed() {
     EventBus.$off("refreshEdit");
     EventBus.$off("refreshAdd");
     EventBus.$off("refreshDelete");
-    EventBus.$on("update header");
   },
   data: () => ({
-    subject: 0,
     value: 1,
     complete: false,
     todos: [],
@@ -119,7 +114,7 @@ export default {
     filter: ["undefined", false, true],
     deleteDialog: false,
     editDialog: false,
-    deleteId: "",
+    deleteId: 0,
     swipeDirection: "None",
     models: {
       base: false,
@@ -181,13 +176,12 @@ export default {
       }
 
       const data = await api.todo
-        .list(this.subject, this.offset, this.limit, query)
+        .list(this.theme, this.offset, this.limit, query)
         .then(result => result.data);
       this.todos = data[0];
 
       this.pagination = Math.ceil(data[1] / this.limit);
       console.log("refresh");
-      console.log(this.pagination);
     },
 
     updateTodo: async function(val) {
@@ -198,8 +192,9 @@ export default {
       await this.getTodo(this.offset, this.limit);
     },
 
-    updateComplete: function(val) {
-      this.completeItem = val;
+    updateComplete: async function(body) {
+      body.complete = !body.complete;
+      await this.updateTodo(body);
     },
 
     editTodo: function(id) {

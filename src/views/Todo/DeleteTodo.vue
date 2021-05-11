@@ -30,7 +30,7 @@ export default {
       type: Boolean
     },
     deleteId: {
-      type: String
+      type: Number
     }
   },
   watch: {
