@@ -61,7 +61,7 @@ export default {
     async logout() {
       await api.auth.logout().then(result => {
         this.$toasted.success(result.data.message, { duration: 2000 });
-        localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
         this.$router.push({ name: "Login" });
       });
     },
