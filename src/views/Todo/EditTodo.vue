@@ -58,14 +58,17 @@ export default {
     editItem: {}
   }),
   methods: {
-    updateTodo: async function(val) {
-      await api.todo.update(val).then(result => {
-        this.$toasted.success(result.data.message, { duration: 2000 });
-      });
-      EventBus.$emit("refreshEdit");
-      this.dialog = false;
-      console.log("close dialog");
-      EventBus.$emit("update theme");
+    updateTodo: async function(body) {
+      try {
+        await api.todo.update(body);
+        this.$toasted.success("Update Todo List", { duration: 2000 });
+        EventBus.$emit("refreshEdit");
+        this.dialog = false;
+        console.log("close dialog");
+        EventBus.$emit("update theme");
+      } catch (e) {
+        this.$toasted.error(e);
+      }
     }
   }
 };

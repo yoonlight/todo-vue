@@ -47,11 +47,16 @@ export default {
   }),
   methods: {
     deleteTodo: async function(id) {
-      const result = await api.todo.delete(id);
-      this.$toasted.success(result.data.message, { duration: 2000 });
-      EventBus.$emit("refreshDelete");
-      this.dialog = false;
-      console.log("close dialog");
+      try {
+        await api.todo.delete(id);
+        this.$toasted.success("Delete Todo", { duration: 2000 });
+        EventBus.$emit("refreshDelete");
+        this.dialog = false;
+        console.log("close dialog");
+      } catch (e) {
+        console.log(e);
+        this.$toasted.error(e, { duration: 2000 });
+      }
     }
   }
 };

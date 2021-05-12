@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import store from "../../store";
 export default {
   data: () => ({
     show1: false,
@@ -67,25 +68,32 @@ export default {
   methods: {
     async validate(val) {
       if (this.$refs.form.validate()) {
-        await this.axios
-          .post(`api/auth/login`, val)
-          .catch(error => {
-            if (error)
-              this.$toasted.error(error.response.data.message, {
-                duration: 2000
-              });
-          })
-          .then(result => {
-            if (result) {
-              this.$toasted.success(result.data.message, { duration: 2000 });
-              let token = result.data.token;
-              localStorage.setItem("user", token);
-              this.$router.push("/");
-            }
+        try {
+          await store.dispatch("LOGIN", val);
+          this.$router.push({ name: "Home" });
+          this.$toasted.success("Success Login", { duration: 2000 });
+          //     let token = result.data.token;
+          //     localStorage.setItem("user", token);
+          //     this.$router.push("/");
+        } catch (e) {
+          this.$toasted.error(e.response.data.message, {
+            duration: 2000
           });
+        }
       }
     },
+    redirect() {
+      const { search } = window.location;
+      const tokens = search.replace(/^\?/, "").split("&");
+      const { returnPath } = tokens.reduce((qs, tkn) => {
+        const pair = tkn.split("=");
+        qs[pair[0]] = decodeURIComponent(pair[1]);
+        return qs;
+      }, {});
 
+      // 리다이렉트 처리
+      this.$router.push(returnPath);
+    },
     register() {
       this.$router.push("/register");
     }

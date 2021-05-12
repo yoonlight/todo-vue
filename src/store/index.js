@@ -22,7 +22,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    LOGIN(state, { accessToken }) {
+    LOGIN(state, accessToken) {
       state.accessToken = accessToken;
       localStorage.accessToken = accessToken;
     },
@@ -36,7 +36,7 @@ export default new Vuex.Store({
       return axios
         .post(`api/auth/login`, { username, password })
         .then(({ data }) => {
-          commit("LOGIN", data);
+          commit("LOGIN", data.accessToken);
           axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${data.accessToken}`;

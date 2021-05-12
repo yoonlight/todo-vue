@@ -179,7 +179,7 @@ export default {
         .list(this.theme, this.offset, this.limit, query)
         .then(result => result.data);
       this.todos = data[0];
-
+      console.log(this.todos);
       this.pagination = Math.ceil(data[1] / this.limit);
       console.log("refresh");
     },
@@ -187,19 +187,18 @@ export default {
     updateTodo: async function(val) {
       await api.todo.update(val).then(result => {
         console.log(result);
-        this.$toasted.success(result.data.message, { duration: 2000 });
+        this.$toasted.success("Update Todo List", { duration: 2000 });
       });
       await this.getTodo(this.offset, this.limit);
     },
 
     updateComplete: async function(body) {
-      body.complete = !body.complete;
       await this.updateTodo(body);
     },
 
     editTodo: function(id) {
       this.editDialog = !this.editDialog;
-      this.edit = this.todos.filter(a => a._id == id)[0];
+      this.edit = this.todos.filter(a => a.id == id)[0];
     },
 
     deleteTodo: function(id) {

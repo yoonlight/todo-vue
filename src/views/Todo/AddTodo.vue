@@ -37,10 +37,15 @@ export default {
         title: this.newTask,
         subject: this.$route.params.theme
       };
-      const result = await api.todo.post(body);
-      this.$toasted.success(result.data, { duration: 2000 });
-      this.newTask = null;
-      EventBus.$emit("refreshAdd");
+      try {
+        await api.todo.post(body);
+        this.$toasted.success("Add Todo", { duration: 2000 });
+        this.newTask = null;
+        EventBus.$emit("refreshAdd");
+      } catch (e) {
+        this.$toasted.success(e, { duration: 2000 });
+        console.log(e);
+      }
     }
   }
 };

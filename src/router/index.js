@@ -1,30 +1,27 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Main from "../components/Main";
-// import store from '../store'
+import store from "../store";
 
 Vue.use(VueRouter);
-// const requireAuth = () => (to, from, next) => {
-//   if (store.getters.isAuthenticated) return next()
-//   next('/auth')
-// }
+
 const routes = [
   {
     path: "/",
-    // beforeEnter: requireAuth(),
     component: Main,
     children: [
       {
-        path: "/:project/:theme?",
-        props: route => ({ theme: route.params.theme || "All" }),
+        name: "Home",
+        path: "/:project/:theme",
         component: () => import("../views/Todo/Todo")
       }
     ]
   },
-  // {
-  //   path: "/auth",
-  //   component: () => import("../views/Login/LoginForm")
-  // },
+  {
+    path: "/auth",
+    name: "Login",
+    component: () => import("../views/Login/LoginForm")
+  },
   {
     path: "/register",
     component: () => import("../views/Login/SignUp")
@@ -35,6 +32,15 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.getters.isAuthenticated;
+  if (isAuthenticated) {
+    next();
+    return;
+  }
+  next({ name: "Login" });
 });
 
 export default router;
