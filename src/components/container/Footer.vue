@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation app fixed v-model="value" :value="value" color="primary">
+  <v-bottom-navigation grow app v-model="value" color="primary">
     <v-btn>
       <span>All</span>
       <v-icon>mdi-history</v-icon>
@@ -22,7 +22,6 @@ export default {
   data: () => ({ value: 1 }),
   watch: {
     value(newValue) {
-      console.log(newValue);
       EventBus.$emit("update Complete", newValue);
     }
   }
