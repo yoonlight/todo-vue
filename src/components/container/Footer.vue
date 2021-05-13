@@ -16,23 +16,14 @@
 </template>
 
 <script>
+import { EventBus } from "../../utils/eventBus";
+
 export default {
   data: () => ({ value: 1 }),
-  computed: {
-    theme() {
-      return this.$route.params.theme;
-    }
-  },
   watch: {
-    // value: {
-    //   handler(val) {
-    // this.$router.push(`/${this.theme}/${val}`);;
-    //   }
-    // },
-    theme: {
-      handler() {
-        this.value = 1;
-      }
+    value(newValue) {
+      console.log(newValue);
+      EventBus.$emit("update Complete", newValue);
     }
   }
 };

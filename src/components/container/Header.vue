@@ -36,6 +36,13 @@
           </v-list-item>
         </v-list-group>
       </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block @click="group">
+            Maange Group
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
   </div>
 </template>
@@ -58,6 +65,9 @@ export default {
     right: null
   }),
   methods: {
+    group() {
+      this.$router.push({ name: "group" });
+    },
     async logout() {
       await api.auth.logout().then(result => {
         this.$toasted.success(result.data.message, { duration: 2000 });

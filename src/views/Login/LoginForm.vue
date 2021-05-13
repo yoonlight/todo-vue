@@ -21,12 +21,6 @@
                   :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                   @click:append="show1 = !show1"
                 ></v-text-field>
-                <v-checkbox
-                  v-model="checkbox"
-                  :rules="[v => !!v || 'You must agree to continue!']"
-                  label="Do you agree?"
-                  required
-                ></v-checkbox>
                 <v-btn
                   block
                   :disabled="!valid"
@@ -61,8 +55,7 @@ export default {
     nameRules: [
       v => !!v || "Name is required",
       v => (v && v.length <= 20) || "Name must be less than 20 characters"
-    ],
-    checkbox: false
+    ]
   }),
 
   methods: {

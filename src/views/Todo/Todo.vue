@@ -1,82 +1,55 @@
 <template>
-  <div>
-    <v-container>
-      <edit-todo :editDialog="editDialog" :item="edit" />
-      <delete-todo :deleteDialog="deleteDialog" :deleteId="deleteId" />
-      <add-todo />
-      <v-list-item
-        v-for="todo in todos"
-        v-bind:key="todo.id"
-        three-line
-        v-touch="{
-          left: () => deleteTodo(todo.id),
-          right: () => swipe('Right'),
-          up: () => swipe('Up'),
-          down: () => swipe('Down')
-        }"
-        v-click-outside="onClickOutsideStandard"
-        @click="editTodo(todo.id)"
-      >
-        <v-list-item-action>
-          <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
-        </v-list-item-action>
-        <v-list-item-content>
-          <span class="text-uppercase font-weight-regular caption">
-            {{ parseDate(todo.created_date) }}
-          </span>
-          <div v-text="todo.title" />
-          <v-divider></v-divider>
-        </v-list-item-content>
-        <v-list-item-action v-if="!mobile">
-          <v-row>
-            <v-col>
-              <v-icon @click="editTodo(todo.id)">mdi-pencil</v-icon>
-            </v-col>
-            <v-col>
-              <v-icon @click="deleteTodo(todo.id)">mdi-delete</v-icon>
-            </v-col>
-          </v-row>
-        </v-list-item-action>
-      </v-list-item>
-      <v-list-item>
-        <v-select v-model="limit" :items="items" label="Standard" />
-      </v-list-item>
-      <div class="text-center" v-if="pagination">
-        <v-pagination v-model="offset" :length="pagination" />
-      </div>
-    </v-container>
-    <v-bottom-navigation
-      app
-      fixed
-      v-model="value"
-      :value="value"
-      color="primary"
+  <v-container>
+    <edit-todo :editDialog="editDialog" :item="edit" />
+    <add-todo />
+    <v-list-item
+      v-for="todo in todos"
+      v-bind:key="todo.id"
+      three-line
+      v-touch="{
+        left: () => deleteTodo(todo.id)
+      }"
+      v-click-outside="onClickOutsideStandard"
+      @click="editTodo(todo.id)"
     >
-      <v-btn>
-        <span>All</span>
-        <v-icon>mdi-history</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Ready</span>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Complete</span>
-        <v-icon>mdi-map-marker</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-  </div>
+      <v-list-item-action>
+        <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
+      </v-list-item-action>
+      <v-list-item-content>
+        <span class="text-uppercase font-weight-regular caption">
+          {{ parseDate(todo.created_date) }}
+        </span>
+        <div v-text="todo.title" />
+        <v-divider></v-divider>
+      </v-list-item-content>
+      <v-list-item-action v-if="!mobile">
+        <v-row>
+          <v-col>
+            <v-icon @click="editTodo(todo.id)">mdi-pencil</v-icon>
+          </v-col>
+          <v-col>
+            <v-icon @click="deleteTodo(todo.id)">mdi-delete</v-icon>
+          </v-col>
+        </v-row>
+      </v-list-item-action>
+    </v-list-item>
+    <v-list-item>
+      <v-select v-model="limit" :items="items" label="Standard" />
+    </v-list-item>
+    <div class="text-center" v-if="pagination">
+      <v-pagination v-model="offset" :length="pagination" />
+    </div>
+  </v-container>
 </template>
 
 <script>
 import AddTodo from "./AddTodo.vue";
-import DeleteTodo from "./DeleteTodo.vue";
 import EditTodo from "./EditTodo.vue";
 import { EventBus } from "../../utils/eventBus";
 import api from "../../service/api";
 
 export default {
-  components: { DeleteTodo, EditTodo, AddTodo },
+  components: { EditTodo, AddTodo },
   async created() {
     await this.getTodo(this.offset, this.limit);
   },
@@ -94,28 +67,31 @@ export default {
       await this.getTodo(this.offset, this.limit);
       console.log("refreshEdit");
     });
+    EventBus.$on("update Complete", async value => {
+      this.value = value;
+      await this.getTodo(this.offset, this.limit);
+      console.log("Update Complete Todo List");
+    });
   },
 
   destroyed() {
     EventBus.$off("refreshEdit");
     EventBus.$off("refreshAdd");
     EventBus.$off("refreshDelete");
+    EventBus.$off("update Complete");
   },
+
   data: () => ({
     value: 1,
     complete: false,
     todos: [],
-    completeItem: {},
     edit: {},
     offset: 1,
     limit: 5,
     pagination: 0,
     items: [5, 10, 15],
     filter: ["undefined", false, true],
-    deleteDialog: false,
     editDialog: false,
-    deleteId: 0,
-    swipeDirection: "None",
     models: {
       base: false,
       conditional: false
@@ -128,25 +104,14 @@ export default {
     theme: function() {
       return this.$route.params.theme;
     }
-    // value: function() {
-    //   return this.$route.params.complete;
-    // }
   },
+
   watch: {
-    value: {
-      async handler(val) {
-        this.complete = this.filter[val];
-        this.offset = 1;
-        await this.getTodo(this.offset, this.limit);
-        console.log(`move to ${this.complete}`);
-      }
-    },
-    completeItem: {
-      deep: true,
-      async handler(val) {
-        await this.updateTodo(val);
-        console.log("update complete todo");
-      }
+    async value(val) {
+      this.complete = this.filter[val];
+      this.offset = 1;
+      await this.getTodo(this.offset, this.limit);
+      console.log(`move to ${this.complete}`);
     },
     offset: {
       async handler() {
@@ -169,6 +134,7 @@ export default {
   },
 
   methods: {
+    // promise -> async await
     getTodo: async function() {
       let query = ``;
       if (this.complete != "undefined") {
@@ -191,7 +157,7 @@ export default {
       });
       await this.getTodo(this.offset, this.limit);
     },
-
+    //updateTodo와 아예 겹치니깐 제거하자
     updateComplete: async function(body) {
       await this.updateTodo(body);
     },
@@ -201,19 +167,18 @@ export default {
       this.edit = this.todos.filter(a => a.id == id)[0];
     },
 
-    deleteTodo: function(id) {
-      this.deleteDialog = !this.deleteDialog;
-      this.deleteId = id;
+    async deleteTodo(id) {
+      const select = confirm("Are you sure to delete todo?");
+      if (select) {
+        await api.todo.delete(id);
+        this.$toasted.success("Delete Todo", { duration: 2000 });
+        EventBus.$emit("refreshDelete");
+      }
     },
 
     parseDate: function(val) {
       let date = new Date(val).toLocaleDateString();
       return date;
-    },
-
-    swipe(direction) {
-      this.swipeDirection = direction;
-      console.log(this.swipeDirection);
     },
 
     onClickOutsideStandard() {

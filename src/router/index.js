@@ -12,8 +12,13 @@ const routes = [
     children: [
       {
         name: "Home",
-        path: "/:project/:theme",
+        path: "/:project?/:theme?",
         component: () => import("../views/Todo/Todo")
+      },
+      {
+        path: "group",
+        name: "group",
+        component: () => import("../views/Group/GroupList.vue")
       }
     ]
   },
