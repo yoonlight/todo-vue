@@ -7,6 +7,11 @@
       no-action
     >
       <template v-slot:activator>
+        <v-list-item-action>
+          <v-btn icon @click="editGroup(child.id)">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-list-item-action>
         <v-list-item-content>
           <v-list-item-title v-text="item.title"></v-list-item-title>
         </v-list-item-content>
@@ -65,8 +70,12 @@ export default {
       }
     },
 
-    async createGroup(body) {
+    async createSubject(body) {
       await api.subject.post(body);
+    },
+
+    async createProject(body) {
+      await api.project.post(body);
     }
   }
 };

@@ -14,11 +14,6 @@ const routes = [
         name: "Home",
         path: "list/:project?/:theme?",
         component: () => import("../views/Todo/Todo")
-      },
-      {
-        path: "group",
-        name: "group",
-        component: () => import("../views/Group/GroupList.vue")
       }
     ]
   },
@@ -30,6 +25,21 @@ const routes = [
   {
     path: "/register",
     component: () => import("../views/Login/SignUp")
+  },
+  {
+    path: "/group",
+    component: () => import("../views/Group/Group.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("../views/Group/GroupList.vue")
+      },
+      {
+        path: "/:id?",
+
+        component: () => import("../views/Group/GroupEdit.vue")
+      }
+    ]
   }
 ];
 

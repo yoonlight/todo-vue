@@ -64,7 +64,7 @@ export default {
   }),
   methods: {
     group() {
-      this.$router.push({ name: "group" });
+      this.$router.push({ path: "/group" });
     },
     async logout() {
       await api.auth.logout().then(result => {
