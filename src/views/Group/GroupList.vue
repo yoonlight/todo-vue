@@ -1,119 +1,72 @@
 <template>
-  <v-card class="mx-auto" max-width="500">
-    <v-sheet class="pa-4 primary lighten-2">
-      <v-text-field
-        v-model="search"
-        label="Search Company Directory"
-        dark
-        flat
-        solo-inverted
-        hide-details
-        clearable
-        clear-icon="mdi-close-circle-outline"
-      ></v-text-field>
-      <v-checkbox
-        v-model="caseSensitive"
-        dark
-        hide-details
-        label="Case sensitive search"
-      ></v-checkbox>
-    </v-sheet>
-    <v-card-text>
-      <v-treeview
-        :items="items"
-        :search="search"
-        :filter="filter"
-        :open.sync="open"
-      >
-        <template v-slot:prepend="{ item }">
-          <v-icon
-            v-if="item.children"
-            v-text="`mdi-${item.id === 1 ? 'home-variant' : 'folder-network'}`"
-          ></v-icon>
-        </template>
-      </v-treeview>
-    </v-card-text>
-  </v-card>
+  <v-list>
+    <v-list-group
+      v-for="item in items"
+      :key="item.title"
+      v-model="item.active"
+      no-action
+    >
+      <template v-slot:activator>
+        <v-list-item-content>
+          <v-list-item-title v-text="item.title"></v-list-item-title>
+        </v-list-item-content>
+      </template>
+
+      <v-list-item v-for="child in item.subject" :key="child.title" link>
+        <v-list-item-content>
+          <v-list-item-title v-text="child.title"></v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-action>
+          <v-row>
+            <v-col>
+              <v-icon @click="editGroup(child.id)">mdi-pencil</v-icon>
+            </v-col>
+            <v-col>
+              <v-icon @click="deleteGroup(child.id)">mdi-delete</v-icon>
+            </v-col>
+          </v-row>
+        </v-list-item-action>
+      </v-list-item>
+    </v-list-group>
+  </v-list>
 </template>
 
 <script>
+import api from "../../service/api";
+
 export default {
+  async created() {
+    const result = await this.getGroup();
+    this.items = result[0];
+    console.log(this.items);
+  },
+
   data: () => ({
-    items: [
-      {
-        id: 1,
-        name: "Vuetify Human Resources",
-        children: [
-          {
-            id: 2,
-            name: "Core team",
-            children: [
-              {
-                id: 201,
-                name: "John"
-              },
-              {
-                id: 202,
-                name: "Kael"
-              },
-              {
-                id: 203,
-                name: "Nekosaur"
-              },
-              {
-                id: 204,
-                name: "Jacek"
-              },
-              {
-                id: 205,
-                name: "Andrew"
-              }
-            ]
-          },
-          {
-            id: 3,
-            name: "Administrators",
-            children: [
-              {
-                id: 301,
-                name: "Mike"
-              },
-              {
-                id: 302,
-                name: "Hunt"
-              }
-            ]
-          },
-          {
-            id: 4,
-            name: "Contributors",
-            children: [
-              {
-                id: 401,
-                name: "Phlow"
-              },
-              {
-                id: 402,
-                name: "Brandon"
-              },
-              {
-                id: 403,
-                name: "Sean"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    open: [1, 2],
-    search: null,
-    caseSensitive: false
+    items: []
   }),
-  computed: {
-    filter() {
-      return this.caseSensitive
-        ? (item, search, textKey) => item[textKey].indexOf(search) > -1
-        : undefined;
+
+  methods: {
+    async getGroup() {
+      const result = await api.project.list();
+      return result.data;
+    },
+
+    editGroup: function(id) {
+      this.editDialog = !this.editDialog;
+      this.edit = this.todos.filter(a => a.id == id)[0];
+    },
+
+    async deleteGroup(id) {
+      const select = confirm("Are you sure to delete todo?");
+      if (select) {
+        await api.project.delete(id);
+        this.$toasted.success("Delete Group", { duration: 2000 });
+        // EventBus.$emit("refreshDelete");
+      }
+    },
+
+    async createGroup(body) {
+      await api.subject.post(body);
     }
   }
 };

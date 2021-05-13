@@ -12,7 +12,7 @@ const routes = [
     children: [
       {
         name: "Home",
-        path: "/:project?/:theme?",
+        path: "list/:project?/:theme?",
         component: () => import("../views/Todo/Todo")
       },
       {

@@ -65,9 +65,6 @@ export default {
           await store.dispatch("LOGIN", val);
           this.$router.push({ name: "Home" });
           this.$toasted.success("Success Login", { duration: 2000 });
-          //     let token = result.data.token;
-          //     localStorage.setItem("user", token);
-          //     this.$router.push("/");
         } catch (e) {
           this.$toasted.error(e.response.data.message, {
             duration: 2000
@@ -75,20 +72,8 @@ export default {
         }
       }
     },
-    redirect() {
-      const { search } = window.location;
-      const tokens = search.replace(/^\?/, "").split("&");
-      const { returnPath } = tokens.reduce((qs, tkn) => {
-        const pair = tkn.split("=");
-        qs[pair[0]] = decodeURIComponent(pair[1]);
-        return qs;
-      }, {});
-
-      // 리다이렉트 처리
-      this.$router.push(returnPath);
-    },
     register() {
-      this.$router.push("/register");
+      this.$router.push({ path: "/register" });
     }
   }
 };

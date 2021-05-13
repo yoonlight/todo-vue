@@ -13,7 +13,7 @@
       @click="editTodo(todo.id)"
     >
       <v-list-item-action>
-        <v-checkbox @click="updateComplete(todo)" v-model="todo.complete" />
+        <v-checkbox @click="updateTodo(todo)" v-model="todo.complete" />
       </v-list-item-action>
       <v-list-item-content>
         <span class="text-uppercase font-weight-regular caption">
@@ -134,19 +134,20 @@ export default {
   },
 
   methods: {
-    // promise -> async await
     getTodo: async function() {
       let query = ``;
       if (this.complete != "undefined") {
         query = `&complete=${this.complete}`;
       }
 
-      const data = await api.todo
-        .list(this.theme, this.offset, this.limit, query)
-        .then(result => result.data);
-      this.todos = data[0];
-      console.log(this.todos);
-      this.pagination = Math.ceil(data[1] / this.limit);
+      const result = await api.todo.list(
+        this.theme,
+        this.offset,
+        this.limit,
+        query
+      );
+      this.todos = result.data[0];
+      this.pagination = Math.ceil(result.data[1] / this.limit);
       console.log("refresh");
     },
 
@@ -156,10 +157,6 @@ export default {
         this.$toasted.success("Update Todo List", { duration: 2000 });
       });
       await this.getTodo(this.offset, this.limit);
-    },
-    //updateTodo와 아예 겹치니깐 제거하자
-    updateComplete: async function(body) {
-      await this.updateTodo(body);
     },
 
     editTodo: function(id) {

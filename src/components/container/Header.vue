@@ -28,7 +28,7 @@
             v-for="subject in item.subject"
             :key="subject.id"
             link
-            :to="{ path: `/${item.id}/${subject.id}` }"
+            :to="{ path: `/list/${item.id}/${subject.id}` }"
           >
             <v-list-item-content>
               <v-list-item-title v-text="subject.title"></v-list-item-title>
@@ -38,9 +38,7 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block @click="group">
-            Maange Group
-          </v-btn>
+          <v-btn block @click="group"> Maange Group </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
