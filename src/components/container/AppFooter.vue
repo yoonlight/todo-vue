@@ -1,5 +1,10 @@
 <template>
-  <v-bottom-navigation grow app v-model="value" color="primary">
+  <v-bottom-navigation
+    app
+    v-model="value"
+    color="primary"
+    v-if="$route.name === 'Home'"
+  >
     <v-btn>
       <span>All</span>
       <v-icon>mdi-history</v-icon>
@@ -19,6 +24,9 @@
 import { EventBus } from "../../utils/eventBus";
 
 export default {
+  created() {
+    console.log(this.$route);
+  },
   data: () => ({ value: 1 }),
   watch: {
     value(newValue) {
