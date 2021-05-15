@@ -37,14 +37,14 @@ const todo = {
 const project = {
   list: () => instance.get(endpoint.project),
   get: id => instance.get(endpoint.project + `/${id}`),
-  post: body => instance.post(endpoint.project + body),
+  post: body => instance.post(endpoint.project, body),
   update: body => instance.patch(endpoint.project + `/${body.id}`, body),
   delete: id => instance.delete(endpoint.project + `/${id}`)
 };
 const subject = {
   list: () => instance.get(endpoint.subject),
   get: id => instance.get(endpoint.subject + `/${id}`),
-  post: body => instance.post(endpoint.subject + body),
+  post: body => instance.post(endpoint.subject, body),
   update: body => instance.patch(endpoint.subject + `/${body.id}`, body),
   delete: id => instance.delete(endpoint.subject + `/${id}`)
 };
