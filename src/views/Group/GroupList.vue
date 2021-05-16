@@ -33,7 +33,7 @@
         </v-list-item>
         <v-list-item>
           <v-text-field
-            label="Legal first name*"
+            label="주제 추가"
             required
             v-model="subject"
           ></v-text-field>

@@ -1,44 +1,55 @@
 <template>
   <v-container>
-    <edit-todo :editDialog="editDialog" :item="edit" />
+    <v-progress-linear
+      :active="loading"
+      :indeterminate="loading"
+      absolute
+      color="deep-purple accent-4"
+    ></v-progress-linear>
     <add-todo />
-    <v-list-item
-      v-for="todo in todos"
-      v-bind:key="todo.id"
-      three-line
-      v-touch="{
-        left: () => deleteTodo(todo.id)
-      }"
-      v-click-outside="onClickOutsideStandard"
-      @click="editTodo(todo.id)"
-    >
-      <v-list-item-action>
-        <v-checkbox @click="updateTodo(todo)" v-model="todo.complete" />
-      </v-list-item-action>
-      <v-list-item-content>
-        <span class="text-uppercase font-weight-regular caption">
-          {{ parseDate(todo.created_date) }}
-        </span>
-        <div v-text="todo.title" />
-        <v-divider></v-divider>
-      </v-list-item-content>
-      <v-list-item-action v-if="!mobile">
-        <v-row>
-          <v-col>
-            <v-icon @click="editTodo(todo.id)">mdi-pencil</v-icon>
-          </v-col>
-          <v-col>
-            <v-icon @click="deleteTodo(todo.id)">mdi-delete</v-icon>
-          </v-col>
-        </v-row>
-      </v-list-item-action>
-    </v-list-item>
-    <v-list-item>
-      <v-select v-model="limit" :items="items" label="Standard" />
-    </v-list-item>
-    <div class="text-center" v-if="pagination">
-      <v-pagination v-model="offset" :length="pagination" />
-    </div>
+    <edit-todo :editDialog="editDialog" :item="edit" />
+    <v-list v-if="loading == false">
+      <v-list-item
+        v-for="todo in todos"
+        v-bind:key="todo.id"
+        three-line
+        v-touch="{
+          left: () => deleteTodo(todo.id)
+        }"
+        v-click-outside="onClickOutsideStandard"
+        @click="editTodo(todo.id)"
+      >
+        <v-list-item-action>
+          <v-checkbox @click="updateTodo(todo)" v-model="todo.complete" />
+        </v-list-item-action>
+        <v-list-item-content>
+          <span class="text-uppercase font-weight-regular caption">
+            {{ parseDate(todo.created_date) }}
+          </span>
+          <div v-text="todo.title" />
+          <v-divider></v-divider>
+        </v-list-item-content>
+        <v-list-item-action v-if="!mobile">
+          <v-row>
+            <v-col>
+              <v-icon @click="editTodo(todo.id)">mdi-pencil</v-icon>
+            </v-col>
+            <v-col>
+              <v-icon @click="deleteTodo(todo.id)">mdi-delete</v-icon>
+            </v-col>
+          </v-row>
+        </v-list-item-action>
+      </v-list-item>
+    </v-list>
+    <!-- <v-col>
+        <v-select v-model="limit" :items="items" label="Todos" />
+      </v-col> -->
+    <v-pagination
+      v-if="pagination"
+      v-model="offset"
+      :length="pagination"
+      total-visible="false"
+    />
   </v-container>
 </template>
 
@@ -57,15 +68,15 @@ export default {
   async mounted() {
     EventBus.$on("refreshAdd", async () => {
       await this.getTodo(this.offset, this.limit);
-      console.log("refreshAdd");
+      console.log("refresh Add");
     });
     EventBus.$on("refreshDelete", async () => {
       await this.getTodo(this.offset, this.limit);
-      console.log("refreshDelete");
+      console.log("refresh Delete");
     });
     EventBus.$on("refreshEdit", async () => {
       await this.getTodo(this.offset, this.limit);
-      console.log("refreshEdit");
+      console.log("refresh Edit");
     });
     EventBus.$on("update Complete", async value => {
       this.value = value;
@@ -95,8 +106,10 @@ export default {
     models: {
       base: false,
       conditional: false
-    }
+    },
+    loading: true
   }),
+
   computed: {
     mobile: function() {
       return this.$vuetify.breakpoint.mobile;
@@ -116,6 +129,7 @@ export default {
     offset: {
       async handler() {
         await this.getTodo();
+        console.log("page:" + this.offset);
         console.log("update offset");
       }
     },
@@ -135,6 +149,7 @@ export default {
 
   methods: {
     getTodo: async function() {
+      this.loading = true;
       let query = ``;
       if (this.complete != "undefined") {
         query = `&complete=${this.complete}`;
@@ -149,6 +164,7 @@ export default {
       this.todos = result.data[0];
       this.pagination = Math.ceil(result.data[1] / this.limit);
       console.log("refresh");
+      this.loading = false;
     },
 
     updateTodo: async function(val) {

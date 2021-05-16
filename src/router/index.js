@@ -33,11 +33,6 @@ const routes = [
       {
         path: "",
         component: () => import("../views/Group/GroupList.vue")
-      },
-      {
-        path: "/:id?",
-
-        component: () => import("../views/Group/GroupEdit.vue")
       }
     ]
   }

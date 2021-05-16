@@ -10,11 +10,11 @@
       <v-icon>mdi-history</v-icon>
     </v-btn>
     <v-btn>
-      <span>Ready</span>
+      <span>Active</span>
       <v-icon>mdi-heart</v-icon>
     </v-btn>
     <v-btn>
-      <span>Complete</span>
+      <span>Completed</span>
       <v-icon>mdi-map-marker</v-icon>
     </v-btn>
   </v-bottom-navigation>
